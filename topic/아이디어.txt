@@ -1,0 +1,19 @@
+Accidental_Drug_Related_Deaths.csv
+
+Easy
+- 언제 사고가 가장 많이 일어나나
+- 남자와 여자의 사고 비율
+- Race 비율
+- 장소별 사고 비율
+- Description 비율
+- 어떤 약을 가장 많이 사용하였나
+
+Medium
+- 연령대 (범주화하기)
+- 나이, 성별 산점도 그리기
+- 나이, 성별, 날짜 3D plot
+
+Hard
+- y(약) x(나이, 성별, 날짜, 장소)
+- nnet 및 predict 사용
+- ROC curve 그리기
