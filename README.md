@@ -1,6 +1,4 @@
 # Data Analytic
- 
-***
 
 ## Crime data in Seattle
 
