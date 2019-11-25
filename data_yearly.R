@@ -48,11 +48,27 @@ mean_occr
 # [1] 46084.45
 
 regFreq <- as.numeric(df$Freq)
+regYear <- as.numeric(df$year)
 
-viewClassNMode(regFreq)
-
-reg <- lm(df$Freq ~ df$year)
+reg <- lm(formula = regFreq ~ regYear)
 summary(reg)
+# Call:
+#   lm(formula = regFreq ~ regYear)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -4146.9  -393.0   343.8   963.0  2693.8 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)   
+# (Intercept)   8861.5     8190.8   1.082  0.30744   
+# regYear        930.6      204.1   4.559  0.00137 **
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 2141 on 9 degrees of freedom
+# Multiple R-squared:  0.6978,	Adjusted R-squared:  0.6642 
+# F-statistic: 20.78 on 1 and 9 DF,  p-value: 0.001369
 
 # making a graphic chart
 ggplot(data = df, aes(x = year, y = Freq, group = 1)) + 
@@ -62,5 +78,5 @@ ggplot(data = df, aes(x = year, y = Freq, group = 1)) +
   dark_theme_gray() +
   geom_hline(yintercept = mean_occr, color = "orange", size = 1) +
   geom_text(aes(label = Freq), vjust = -0.3) +
-  geom_abline(reg)
+  stat_smooth(method = 'lm', col = 'red')
 
