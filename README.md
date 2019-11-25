@@ -8,11 +8,18 @@ Seattle의 범죄 데이터를 다양한 관점에서 분석하여 범죄율과 
 
 ## Well Known Function
 
-class, mode를 한번에 출력
+### 선형 회귀 공식 도출 함수 
 
 ```R
-viewClassNMode <- function(data) {
-  cat('class:', class(data))
-  cat('\n','mode:', mode(data))
+lm2equation=function(mydata,xvar,yvar,parse=FALSE){
+    fit=eval(parse(text=paste0("lm(",yvar,"~",xvar,",data=",mydata,")")))
+    intercept=round(coef(fit)[1],1)
+    slope=round(coef(fit)[2],1)
+    if(parse) equation=paste0("y==",slope,"*x",ifelse(intercept>=0,'+','-'),abs(intercept))
+    else equation=paste0("y = ",slope,"x",ifelse(intercept>=0,' + ',' - '),abs(intercept))
+    p=round(summary(fit)$coeff[2,4],3)
+    if(p==0) equation=paste(equation,"(p < 0.001)")
+    else equation=paste(equation,"(p =",p,")")
+    equation
 }
 ```
