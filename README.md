@@ -6,4 +6,13 @@ Seattle의 범죄 데이터를 다양한 관점에서 분석하여 범죄율과 
 
 ***
 
-## 
+## Well Known Function
+
+class, mode를 한번에 출력
+
+```R
+viewClassNMode <- function(data) {
+  cat('class:', class(data))
+  cat('\n','mode:', mode(data))
+}
+```

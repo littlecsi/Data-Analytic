@@ -2,13 +2,20 @@ library(dplyr)
 library(ggplot2)
 library(ggdark)
 
+### set work space
+setwd('topic/Crime/')
+
+viewClassNMode <- function(data) {
+  cat('class:', class(data))
+  cat('\n','mode:', mode(data))
+}
+
 ### dataset
 df <- read.csv('Seattle_Crime_Data.csv', header = T)
 head(df)
 
 ### sorting dataset to extract 'Occurred.Date' column
-df01 <- df %>% 
-  select('Occurred.Date')
+df01 <- df %>% select('Occurred.Date')
 head(df01)
 
 ### substring years
@@ -40,6 +47,13 @@ mean_occr <- mean(df$Freq)
 mean_occr
 # [1] 46084.45
 
+regFreq <- as.numeric(df$Freq)
+
+viewClassNMode(regFreq)
+
+reg <- lm(df$Freq ~ df$year)
+summary(reg)
+
 # making a graphic chart
 ggplot(data = df, aes(x = year, y = Freq, group = 1)) + 
   geom_line(linetype = "dotted", color = "red", size = 2) +
@@ -47,4 +61,6 @@ ggplot(data = df, aes(x = year, y = Freq, group = 1)) +
   labs(x = "Year", y = "Frequency", title = "The Number of Crime Occurrences per Each Year during the Last 10 years") +
   dark_theme_gray() +
   geom_hline(yintercept = mean_occr, color = "orange", size = 1) +
-  geom_text(aes(label = Freq), vjust = -0.3)
+  geom_text(aes(label = Freq), vjust = -0.3) +
+  geom_abline(reg)
+
