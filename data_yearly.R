@@ -3,7 +3,7 @@ library(ggplot2)
 library(ggdark)
 
 ### set work space
-setwd('topic/Crime/')
+# setwd('topic/Crime/')
 
 viewClassNMode <- function(data) {
   cat('class:', class(data))
