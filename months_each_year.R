@@ -119,27 +119,25 @@ df_combined
 colnames(df_combined) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
 df_combined$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
 
-# ### make year average
-# avg_df <- as.data.frame(lapply(df_combined[-12,], mean))
-# avg_df$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
-# class(avg_df)
-# avg_df
-
-# ### making a line graph
+### making a line graph
 df_channged <- melt(df_combined, id = 'month')
 df_channged
-plot1 <- ggplot(df_channged, aes(x = month, y = value)) +
+
+graph01 <- ggplot(df_channged, aes(x = month, y = value)) +
   geom_line(aes(colour = variable, group = variable))  +
-  labs(x = "Month", y = "Frequency", title = "The Number of Monthly Crime Occurrences per Each Year") +
-  dark_theme_minimal()
+  labs(x = "Month", y = "Frequency", title = "The Number of Monthly Crime Occurrences per Each Year", color='Year') +
+  dark_theme_grey()
 
-
+### calculating average values & adding a new column
 average <- c()
 for(i in c(1:12)) {
   average <- c(average, round(mean(as.numeric(df_combined[i,-12])), 0))
 }
 average
 df_combined$avg <- average
+df_combined
 
-plot2 <- plot1 + geom_line(aes(x=month, avg, group=1), data=df_combined[,c(12,13)], linetype='dashed')
-plot2
+### adding a new line on graph01 graph
+graph02 <- graph01 + 
+  geom_line(aes(x=month, avg, group=1), data=df_combined[,12:13], linetype='longdash', size = 1)
+graph02
