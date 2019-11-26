@@ -76,7 +76,6 @@ ggplot(data = df, aes(x = year, y = Freq, group = 1)) +
   geom_point(color = "blue", size = 3) +
   labs(x = "Year", y = "Frequency", title = "The Number of Crime Occurrences per Each Year during the Last 10 years") +
   dark_theme_gray() +
-  geom_hline(yintercept = mean_occr, color = "orange", size = 1) +
+  # geom_hline(yintercept = mean_occr, color = "orange", size = 1) +
   geom_text(aes(label = Freq), vjust = -0.3) +
-  stat_smooth(method = 'lm', col = 'red')
-
+  stat_smooth(method = 'lm', col = 'orange')
