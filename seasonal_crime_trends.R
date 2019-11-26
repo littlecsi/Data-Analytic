@@ -120,9 +120,31 @@ colnames(df_combined) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014
 df_combined$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
 
 ### season combine
-spring <- ifelse(df_combined$month == c('03', '04', '05'), 1,0)
-spring
-df_season <- data.frame()
+
+# function get Seasonal Average
+## param : season data (data frame)
+## return : vector
+getSeasonalAvg <- function(season) {
+  season_avg <- c()
+  for(i in c(1:11)) {
+    season_avg <- c(season_avg, round(mean(as.numeric(season[,i])), 0))
+  }
+  return(season_avg)
+}
+
+spring <- subset(df_combined, df_combined$month %in% c('03', '04', '05'))
+summer <- subset(df_combined, df_combined$month %in% c('06', '07', '08'))
+fall <- subset(df_combined, df_combined$month %in% c('09', '10', '11'))
+winter <- subset(df_combined, df_combined$month %in% c('12', '01', '02'))
+
+df_season <- data.frame(
+  spring = getSeasonalAvg(spring), 
+  summer = getSeasonalAvg(summer), 
+  fall = getSeasonalAvg(fall), 
+  winter = getSeasonalAvg(winter))
+
+rownames(df_season) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
+df_season
 
 # ### making a line graph
 df_channged <- melt(df_combined, id = 'month')
