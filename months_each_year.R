@@ -137,7 +137,7 @@ average
 df_combined$avg <- average
 df_combined
 
-### adding a new line on graph01 graph
+### adding a new line on graph01
 graph02 <- graph01 + 
   geom_line(aes(x=month, avg, group=1), data=df_combined[,12:13], linetype='longdash', size = 1)
 graph02
