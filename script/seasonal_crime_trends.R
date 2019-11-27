@@ -45,7 +45,7 @@ transDf <- function(season) {
 }
 
 ### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T)
+df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
 head(df)
 
 ### sorting dataset to extract 'Occurred.Date' column

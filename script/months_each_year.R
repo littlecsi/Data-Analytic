@@ -14,7 +14,7 @@ setwd("D:/GitHub/Data-Analytic/topic/Crime/")
 
 ####################################################################################################
 ### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T)
+df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
 head(df)
 
 ####################################################################################################
