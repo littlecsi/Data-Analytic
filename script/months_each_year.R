@@ -1,123 +1,57 @@
+####################################################################################################
+# Library Import
 library(dplyr)
 library(ggplot2)
 library(ggdark)
 library(reshape2)
+library(stringr)
 
+####################################################################################################
 ### set work space
-setwd('topic/Crime/')
+# setwd('topic/Crime/')
+# Lee's directory
+setwd("D:/GitHub/Data-Analytic/topic/Crime/")
 
+####################################################################################################
 ### dataset
 df <- read.csv('Seattle_Crime_Data.csv', header = T)
 head(df)
 
-### sorting dataset to extract 'Occurred.Date' column
-df01 <- df %>% 
-  select('Occurred.Date')
-head(df01)
+####################################################################################################
+### Functions
+getYrData <- function(sYr, fYr, data) {
+  year <- as.character(c(sYr:fYr)) # Year vector (for loop)
+  len <- nrow(data) # Total number of rows in the data frame
+  month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
+  start <- 0
 
-### 2008 ~ 2019 data
-# hard-coding is the best!!!!! 
-# View(substr(df01$Occurred.Date, 7, 10) == '2008')
-# df$Occurred.Date[1037] is TRUE
-df01 <- substr(df01$Occurred.Date[1037:nrow(df01)], 1, 10)
-head(df01)
-df01 <- gsub('/','', df01)
-head(df01)
+  # finds the starting point of the data
+  for(i in c(1:len)) { if(substr(data[i,2], 7, 10) == as.character(sYr)) { start <- i; break; } }
 
-### data for each 
-# in 2008
-test_08 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2008'), 1, 2)))
-data_2008 <- test_08$Freq
-data_2008
+  # Extract only the data required.
+  dates <- data %>% select("Occurred.Date")
+  dates <- as.character(levels(unlist(dates)))[unlist(dates)]
+  dates <- gsub("/", "", dates[c(start:len)])
+  
+  df_combined <- data.frame(a=c(1:12))
+  for(y in year) {
+    t_df <- as.data.frame(
+      table(
+        substr(
+          subset(dates, substr(dates, 5, 8) == y), 1, 2)))
+    df_combined <- cbind(df_combined, t_df$Freq)
+  }
+  df_combined <- df_combined[,-1]
+  colnames(df_combined) <- year
+  df_combined$month <- month
 
-# in 2009
-test_09 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2009'), 1, 2)))
-data_2009 <- test_09$Freq
-data_2009
+  return(df_combined)
+}
 
-# in 2010
-test_10 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2010'), 1, 2)))
-data_2010 <- test_10$Freq
-data_2010
+####################################################################################################
+### Main
 
-# in 2011
-test_11 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2011'), 1, 2)))
-data_2011 <- test_11$Freq
-data_2011
-
-# in 2012
-test_12 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2012'), 1, 2)))
-data_2012 <- test_12$Freq
-data_2012
-
-# in 2013
-test_13 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2013'), 1, 2)))
-data_2013 <- test_13$Freq
-data_2013
-
-# in 2014
-test_14 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2014'), 1, 2)))
-data_2014 <- test_14$Freq
-data_2014
-
-# in 2015
-test_15 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2015'), 1, 2)))
-data_2015 <- test_15$Freq
-data_2015
-
-# in 2016
-test_16 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2016'), 1, 2)))
-data_2016 <- test_16$Freq
-data_2016
-
-# in 2017
-test_17 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2017'), 1, 2)))
-data_2017 <- test_08$Freq
-data_2017
-
-# in 2018
-test_18 <- as.data.frame(
-  table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2018'), 1, 2)))
-data_2018 <- test_18$Freq
-data_2018
-
-### data combined
-df_combined <- data.frame(cbind(data_2008, data_2009, data_2010, data_2011, data_2012, data_2013, data_2014, data_2015, data_2016, data_2017, data_2018))
-df_combined
-colnames(df_combined) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
-df_combined$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
+df_combined <- getYrData(2008, 2018, df)
 
 ### making a line graph
 df_channged <- melt(df_combined, id = 'month')
