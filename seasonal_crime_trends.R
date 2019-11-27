@@ -3,6 +3,36 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
+# function get Seasonal Average
+## param : season data (data frame)
+## return : vector
+getSeasonalAvg <- function(season) {
+  season_avg <- c()
+  for(i in c(1:11)) {
+    season_avg <- c(season_avg, round(mean(as.numeric(season[,i])), 0))
+  }
+  return(season_avg)
+}
+
+# function get Seasonal Proportion
+## param : season data (data frame), full data included season (data frame)
+## return : vector
+getSeasonalProp <- function(season, originData) {
+  season_prop <- c()
+  for(i in c(1:11)) {
+    season_prop <- c(season_prop, round(sum(as.numeric(season[,i]))/sum(as.numeric(originData[,i])), 4))
+  }
+  return(season_prop * 100)
+}
+
+# function Transpose Data Frame
+## param : data frame
+## return : data frame
+transDf <- function(season) {
+  transposedData <- as.data.frame(t(as.matrix(season)))
+  return(transposedData)
+}
+
 ### set work space
 setwd('topic/Crime/')
 
@@ -23,6 +53,9 @@ df01 <- substr(df01$Occurred.Date[1037:nrow(df01)], 1, 10)
 head(df01)
 df01 <- gsub('/','', df01)
 head(df01)
+
+# year vector variable
+year_vector <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
 
 ### data for each 
 # in 2008
@@ -116,51 +149,68 @@ data_2018
 ### data combined
 df_combined <- data.frame(cbind(data_2008, data_2009, data_2010, data_2011, data_2012, data_2013, data_2014, data_2015, data_2016, data_2017, data_2018))
 df_combined
-colnames(df_combined) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
+colnames(df_combined) <- year_vector
 df_combined$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
 
 ### season combine
 
-# function get Seasonal Average
-## param : season data (data frame)
-## return : vector
-getSeasonalAvg <- function(season) {
-  season_avg <- c()
-  for(i in c(1:11)) {
-    season_avg <- c(season_avg, round(mean(as.numeric(season[,i])), 0))
-  }
-  return(season_avg)
-}
 
+# make season <- subset by month
 spring <- subset(df_combined, df_combined$month %in% c('03', '04', '05'))
 summer <- subset(df_combined, df_combined$month %in% c('06', '07', '08'))
 fall <- subset(df_combined, df_combined$month %in% c('09', '10', '11'))
 winter <- subset(df_combined, df_combined$month %in% c('12', '01', '02'))
 
-df_season <- data.frame(
+# make data frame by season avg column
+df_season_avg <- data.frame(
   spring = getSeasonalAvg(spring), 
   summer = getSeasonalAvg(summer), 
   fall = getSeasonalAvg(fall), 
   winter = getSeasonalAvg(winter))
+rownames(df_season_avg) <- year_vector
 
-rownames(df_season) <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
-df_season
+# make data frame by season prop column
+df_season_prop <- data.frame(
+  spring = getSeasonalProp(spring, df_combined), 
+  summer = getSeasonalProp(summer, df_combined), 
+  fall = getSeasonalProp(fall, df_combined), 
+  winter = getSeasonalProp(winter, df_combined))
+rownames(df_season_prop) <- year_vector
+df_season_prop
 
-# ### making a line graph
-df_channged <- melt(df_combined, id = 'month')
-df_channged
-plot1 <- ggplot(df_channged, aes(x = month, y = value)) +
-  geom_line(aes(colour = variable, group = variable))  +
-  labs(x = "Month", y = "Frequency", title = "The Number of Monthly Crime Occurrences per Each Year") +
-  dark_theme_minimal()
+# transpose data frame for melting
+t_season_avg <- transDf(df_season_avg)
+season <- rownames(t_season_avg)
+t_season_avg$season <- season
+t_season_avg
 
+# melt data
+m_season_avg <- melt(t_season_avg, id = 'season')
+colnames(m_season_avg) <- c('season', 'year', 'freq')
+m_season_avg
 
-average <- c()
-for(i in c(1:12)) {
-  average <- c(average, round(mean(as.numeric(df_combined[i,-12])), 0))
-}
-average
-df_combined$avg <- average
+# set legend order
+m_season_avg <- transform(m_season_avg, season = factor(season, levels = c('spring', 'summer', 'fall', 'winter')))
 
-plot2 <- plot1 + geom_line(aes(x=month, avg, group=1), data=df_combined[,c(12,13)], linetype='dashed')
-plot2
+# draw season average plot
+season_plot1 <- ggplot(m_season_avg, aes(x = year, y = freq, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(3000, 4500))+ theme_minimal()
+season_plot1
+
+# tanspose season prop data
+t_season_prop <- transDf(df_season_prop)
+season <- rownames(t_season_prop)
+t_season_prop$season <- season
+t_season_prop
+
+# melt data
+m_season_prop <- melt(t_season_prop, id = 'season')
+colnames(m_season_prop) <- c('season', 'year', 'prop')
+
+# set legend order
+m_season_prop <- transform(m_season_prop, season = factor(season, levels = c('spring', 'summer', 'fall', 'winter')))
+m_season_prop
+
+# draw season prop plot
+season_plot2 <- ggplot(m_season_prop, aes(x = year, y = prop, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(20, 30))+ theme_minimal()
+season_plot2
+
