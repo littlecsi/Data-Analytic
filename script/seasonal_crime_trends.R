@@ -3,6 +3,9 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
+### set work space
+setwd('topic/Crime/')
+
 # function get Seasonal Average
 ## param : season data (data frame)
 ## return : vector
@@ -25,6 +28,14 @@ getSeasonalProp <- function(season, originData) {
   return(season_prop * 100)
 }
 
+# function get Seasonal Proportion
+## param : season data (data frame), full data included season (data frame)
+## return : vector
+getSeasonalTot <- function(season, yearData) {
+  yearProp <- round(sum(season[,-12])/sum(yearData[,-12]), 4)
+  return(yearProp * 100)
+}
+
 # function Transpose Data Frame
 ## param : data frame
 ## return : data frame
@@ -32,9 +43,6 @@ transDf <- function(season) {
   transposedData <- as.data.frame(t(as.matrix(season)))
   return(transposedData)
 }
-
-### set work space
-setwd('topic/Crime/')
 
 ### dataset
 df <- read.csv('Seattle_Crime_Data.csv', header = T)
@@ -55,7 +63,7 @@ df01 <- gsub('/','', df01)
 head(df01)
 
 # year vector variable
-year_vector <- c('2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018')
+year_vector <- as.character(c(2008:2018))
 
 ### data for each 
 # in 2008
@@ -152,14 +160,15 @@ df_combined
 colnames(df_combined) <- year_vector
 df_combined$month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
 
-### season combine
-
-
 # make season <- subset by month
 spring <- subset(df_combined, df_combined$month %in% c('03', '04', '05'))
 summer <- subset(df_combined, df_combined$month %in% c('06', '07', '08'))
 fall <- subset(df_combined, df_combined$month %in% c('09', '10', '11'))
 winter <- subset(df_combined, df_combined$month %in% c('12', '01', '02'))
+
+#####
+# Frequency of Seasonal Crime
+#####
 
 # make data frame by season avg column
 df_season_avg <- data.frame(
@@ -168,15 +177,6 @@ df_season_avg <- data.frame(
   fall = getSeasonalAvg(fall), 
   winter = getSeasonalAvg(winter))
 rownames(df_season_avg) <- year_vector
-
-# make data frame by season prop column
-df_season_prop <- data.frame(
-  spring = getSeasonalProp(spring, df_combined), 
-  summer = getSeasonalProp(summer, df_combined), 
-  fall = getSeasonalProp(fall, df_combined), 
-  winter = getSeasonalProp(winter, df_combined))
-rownames(df_season_prop) <- year_vector
-df_season_prop
 
 # transpose data frame for melting
 t_season_avg <- transDf(df_season_avg)
@@ -193,8 +193,21 @@ m_season_avg
 m_season_avg <- transform(m_season_avg, season = factor(season, levels = c('spring', 'summer', 'fall', 'winter')))
 
 # draw season average plot
-season_plot1 <- ggplot(m_season_avg, aes(x = year, y = freq, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(3000, 4500))+ theme_minimal()
+season_plot1 <- ggplot(m_season_avg, aes(x = year, y = freq, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(3000, 4500)) + labs(x = "Year", y = "Frequency", title = "Frequency of Seasonal Crime Occurance during the Last 10 years") + theme_minimal()
 season_plot1
+
+#####
+# Proportion of Seasonal Crime
+#####
+
+# make data frame by season prop column
+df_season_prop <- data.frame(
+  spring = getSeasonalProp(spring, df_combined), 
+  summer = getSeasonalProp(summer, df_combined), 
+  fall = getSeasonalProp(fall, df_combined), 
+  winter = getSeasonalProp(winter, df_combined))
+rownames(df_season_prop) <- year_vector
+df_season_prop
 
 # tanspose season prop data
 t_season_prop <- transDf(df_season_prop)
@@ -211,6 +224,44 @@ m_season_prop <- transform(m_season_prop, season = factor(season, levels = c('sp
 m_season_prop
 
 # draw season prop plot
-season_plot2 <- ggplot(m_season_prop, aes(x = year, y = prop, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(20, 30))+ theme_minimal()
+season_plot2 <- ggplot(m_season_prop, aes(x = year, y = prop, fill = season)) + geom_bar(stat='identity', position = 'dodge', aes(col = season, group = season)) + coord_cartesian(ylim = c(20, 30)) + labs(x = "Year", y = "Percentage", title = "Percentage of Seasonal Crime Occurance during the Last 10 years") + theme_minimal()
 season_plot2
+
+#####
+# Proportion of Seasonal Crime
+#####
+
+df_season_tot <- data.frame(
+  spring = getSeasonalTot(spring, df_combined),
+  summer = getSeasonalTot(summer, df_combined),
+  fall = getSeasonalTot(fall, df_combined),
+  winter = getSeasonalTot(winter, df_combined)
+  )
+df_season_tot
+# spring summer  fall winter
+# 1  24.64  25.52 25.78  24.06
+
+t_season_tot <- transDf(df_season_tot)
+t_season_tot$season <- season
+t_season_tot
+
+ggplot(data = t_season_tot, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y') + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
+
+#####
+# Null hypothesis
+## There is no difference in seasonal crime rates.
+#####
+
+resultChisq <- chisq.test(unlist(df_season_tot[1,]))
+
+# Chi-squared test for given probabilities
+# 
+# data:  unlist(df_season_tot[1, ])
+# X-squared = 0.07568, df = 3, p-value = 0.9946
+
+resultChisq$p.value > 0.05
+# [1] TRUE
+
+## Reject Null Hypothesis
+### Therefore, There is difference in seasonal crime rates.
 
