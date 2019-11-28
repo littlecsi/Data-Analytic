@@ -1,0 +1,40 @@
+,"Murder and
+nonnegligent
+manslaughter","Forcible
+rape",Robbery,"Aggravated
+assault",Burglary,"Larceny-
+theft","Motor
+vehicle
+theft",Arson,"Violent
+crime","Property
+crime"
+DUI,,,,1,,,,,1,0
+FAMILY OFFENSE-NONVIOLENT,,,,2,,,,,1,0
+SEX OFFENSE-OTHER,,3,,,,,,,1,0
+BURGLARY-RESIDENTIAL,,,,,4,,,,0,1
+RAPE,,5,,,,,,,1,0
+CAR PROWL,,,,,,,6,,0,1
+HOMICIDE,7,,,,,,,,1,0
+MOTOR VEHICLE THEFT,,,,,,,8,,0,1
+THEFT-ALL OTHER,,,,,,9,,,0,1
+PROSTITUTION,,10,,,,,,,1,0
+THEFT-BUILDING,,,,,,11,,,0,1
+BURGLARY-COMMERCIAL,,,,,12,,,,0,1
+ROBBERY-STREET,,,13,,,,,,1,0
+AGGRAVATED ASSAULT,,,,14,,,,,1,0
+BURGLARY-RESIDENTIAL-SECURE PARKING,,,,,15,,,,0,1
+TRESPASS,,,,,16,,,,0,1
+BURGLARY-COMMERCIAL-SECURE PARKING,,,,,17,,,,0,1
+AGGRAVATED ASSAULT-DV,,,,18,,,,,1,0
+THEFT-SHOPLIFT,,,,,,19,,,0,1
+NARCOTIC                           ,,,,20,,,,,1,0
+THEFT-BICYCLE,,,,,,,21,,0,1
+ROBBERY-RESIDENTIAL,,,22,,,,,,1,0
+ARSON,,,,,,,,23,0,1
+PORNOGRAPHY,,24,,,,,,,1,0
+ROBBERY-COMMERCIAL,,,25,,,,,,1,0
+LIQUOR LAW VIOLATION               ,,,,26,,,,,1,0
+WEAPON,,,,27,,,,,1,0
+LOITERING,,,28,,,,,,1,0
+DISORDERLY CONDUCT,,,29,,,,,,1,0
+GAMBLE,,,,,,30,,,0,1

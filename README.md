@@ -39,3 +39,4 @@ lm2equation=function(mydata,xvar,yvar,parse=FALSE){
 ```
 
 - Reference Link : [선형회귀식](https://rpubs.com/cardiomoon/98019)
+
