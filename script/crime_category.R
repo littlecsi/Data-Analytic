@@ -41,15 +41,9 @@ for(i in c(1:ncol(mapCrime))) {
   mapCrime[,i] <- ifelse(is.na(mapCrime[,i]), 0, mapCrime[,i])
 }
 
-str(crimeCat)
-str(mapCrime)
-str(df_group)
-
 df_group$Category <- as.character(levels(unlist(df_group$Category)))[unlist(df_group$Category)]
-
 crimeCat$Crime.SubcategoryIndex <- factor(crimeCat$Crime.Subcategory,
         levels=df_group$Category, labels=df_group$Index)
-
 
 crimeCat$Category <- 
   ifelse(crimeCat[,3] %in% mapCrime[,2], 'Murder', 
@@ -60,4 +54,15 @@ crimeCat$Category <-
   ifelse(crimeCat[,3] %in% mapCrime[,7], 'LarcenyTheft', 
   ifelse(crimeCat[,3] %in% mapCrime[,8], 'VehicleTheft', 'Arson')))))))
 
-head(crimeCat)
+crimeCat <- crimeCat[,-3]
+violent <- c('Murder', 'Rape', 'Robbery', 'Aggravated')
+crimeCat$Violent <- ifelse(crimeCat[,3] %in% violent, T, F)
+
+vioTable <- table(crimeCat$Violent)
+## True : Violent, False : Property
+# FALSE   TRUE 
+# 426579  96750
+
+v_table <- as.data.frame(c(vioTable))
+
+ggplot(data = v_table, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = -1) + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
