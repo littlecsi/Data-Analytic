@@ -19,6 +19,8 @@ head(df)
 
 ####################################################################################################
 ### Functions
+getCol
+
 getYrData <- function(sYr, fYr, data) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
