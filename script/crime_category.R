@@ -12,12 +12,12 @@ head(df)
 colnames(df)
 
 df01 <- df %>% 
-  select('Crime.Subcategory')
+  select('Crime.Subcategory', 'Occurred.Date')
 df01
-aa <- as.character(levels(unlist(df01)))[unlist(df01)]
-table(is.na(aa))
-table(is.null(aa))
-table(aa %in% "")
 
-nrow(unique(df01))
-table(df01)
+df02 <- subset(df01, df01[,1] != "")
+df02
+
+length(df01$Crime.Subcategory)
+
+table(df01$Crime.Subcategory)

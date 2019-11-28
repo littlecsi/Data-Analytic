@@ -245,14 +245,16 @@ t_season_tot <- transDf(df_season_tot)
 t_season_tot$season <- season
 t_season_tot
 
-ggplot(data = t_season_tot, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y') + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
+t_season_tot <- transform(t_season_tot, season = factor(season, levels = c('spring', 'summer', 'fall', 'winter')))
+
+ggplot(data = t_season_tot, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = -1) + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
 
 #####
 # Null hypothesis
 ## There is no difference in seasonal crime rates.
 #####
 
-resultChisq <- chisq.test(unlist(df_season_tot[1,]))
+resultChisq <- chisq.test(df_season_tot[1,])
 
 # Chi-squared test for given probabilities
 # 
@@ -263,5 +265,4 @@ resultChisq$p.value > 0.05
 # [1] TRUE
 
 ## Reject Null Hypothesis
-### Therefore, There is difference in seasonal crime rates.
-
+### Therefore, There is a difference in seasonal crime rates.
