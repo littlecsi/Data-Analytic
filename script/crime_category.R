@@ -15,11 +15,24 @@ nrow(df)
 # get columns data with date
 ## param : necessary columns
 ## return : data frame(date, param data)
-getcolumns <- function(data, columns) {
-  len <- length(columns)
+getColumns <- function(data, sYr, fYr, columns) {
+  year <- as.character(c(sYr:fYr)) # Year vector (for loop)
+  len <- nrow(data) # Total number of rows in the data frame
+  colLen <- length(columns)
+  month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
+  start <- 0
+  
+  # finds the starting point of the data
+  for(i in c(1:len)) {
+    if(substr(data[i,2], 7, 10) == as.character(sYr)) {
+      start <- i
+      break
+    } 
+  }
+  
   df <- data %>% select('Occurred.Date')
-  if(len > 0) {
-    for(i in c(1:len)) {
+  if(colLen > 0) {
+    for(i in c(1:colLen)) {
       col <- columns[i]
       df <- cbind(df, data[col])
     }
@@ -27,9 +40,9 @@ getcolumns <- function(data, columns) {
   return(df)
 }
 
-crimeCat <- getcolumns(df, c('Crime.Subcategory'))
+crimeCat <- getColumns(df, 2008, 2018, c('Crime.Subcategory'))
 crimeCat <- subset(crimeCat, crimeCat$Crime.Subcategory != '')
-crimeCat
+head(crimeCat)
 
 group <- unique(crimeCat$Crime.Subcategory)
 df_group <- data.frame(Category = group, Index = c(1:length(group)))
@@ -63,6 +76,9 @@ vioTable <- table(crimeCat$Violent)
 # FALSE   TRUE 
 # 426579  96750
 
-v_table <- as.data.frame(c(vioTable))
+v_table <- data.frame(c(vioTable))
 
-ggplot(data = v_table, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = -1) + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
+df_table <- cbind(v_table, Violent=c('Property', 'Violent'))
+colnames(df_table) <- c('Freq', 'Type')
+
+ggplot(data = df_table, aes(x = "", y = Freq, fill = Type)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = 1) + labs(x = "", y = "", title = "Proportion of Crime Type during the Last 10 years") + theme_minimal()
