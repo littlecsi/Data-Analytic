@@ -16,7 +16,7 @@ getColumns <- function(data, sYr, fYr, columns) {
   # finds the starting point and the end of the data
   startFound <- F
   for(i in c(1:len)) {
-    if(substr(data[i,2], 7, 10) == as.character(sYr) & is.FALSE(startFound)) {
+    if(substr(data[i,2], 7, 10) == as.character(sYr) & startFound == F) {
       start <- i
       startFound <- T
     }
