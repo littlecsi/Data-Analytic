@@ -5,6 +5,10 @@
 ####################################################################################################
 
 ####################################################################################################
+### Library
+library(dplyr)
+
+####################################################################################################
 ### Functions
 getColumns <- function(data, sYr, fYr, columns) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
@@ -28,15 +32,16 @@ getColumns <- function(data, sYr, fYr, columns) {
 
   data <- data[c(start:end),]
 
-  df <- data[c(start:len),] %>% select('Occurred.Date')
+  df <- data["Occurred.Date"]
   
-  df$year <- substr(df[,1], 7, 10)
-  df$month <- substr(df[,1], 1, 2)
+  yVec <- substr(df, 7, 10)
+  mVec <- substr(df, 1, 2)
+
+  df$year <- yVec; df$month <- mVec;
   
   if(colLen > 0) {
     for(i in c(1:colLen)) {
-      col <- columns[i]
-      df <- cbind(df, data[col])
+      df <- cbind(df, data[columns[i]])
     }
   }
   return(df)
@@ -48,7 +53,12 @@ getYrData <- function(data, sYr, fYr) {
   start <- 0
 
   # finds the starting point of the data
-  for(i in c(1:len)) { if(substr(data[i,2], 7, 10) == as.character(sYr)) { start <- i; break; } }
+  for(i in c(1:len)) {
+    if(substr(data[i,2], 7, 10) == as.character(sYr)) {
+      start <- i
+      break
+    } 
+  }
 
   # Extract only the data required.
   dates <- data %>% select("Occurred.Date")
@@ -69,15 +79,3 @@ getYrData <- function(data, sYr, fYr) {
 
   return(df_combined)
 }
-
-####################################################################################################
-# ### Test
-library(dplyr)
-
-setwd("./topic/Crime/")
-
-df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
-
-df_combined <- getColumns(df, 2008, 2018, c("Sector"))
-
-str(df)

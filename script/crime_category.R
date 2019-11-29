@@ -3,6 +3,8 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
+source(file='../')
+
 ### set work space
 setwd('topic/Crime/')
 
@@ -39,7 +41,7 @@ getColumns <- function(data, sYr, fYr, columns) {
   
   data <- data[c(start:end),]
   
-  df <- data[c(start:len),] %>% select('Occurred.Date')
+  df <- data[c(start %>% select('Occurred.Date')
   
   df$year <- substr(df[,1], 7, 10)
   df$month <- substr(df[,1], 1, 2)
