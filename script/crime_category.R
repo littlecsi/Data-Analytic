@@ -3,57 +3,18 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
-source(file='../')
+getwd()
+setwd('../../Data-Analytic/')
+source(file='script/functions.R')
 
 ### set work space
-setwd('topic/Crime/')
+setwd('dataset/Crime')
 
 ### dataset
 df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
 head(df)
 colnames(df)
 nrow(df)
-
-####################################################################################################
-### Functions
-# get columns data with date
-## param : necessary columns
-## return : data frame(date, param data)
-getColumns <- function(data, sYr, fYr, columns) {
-  year <- as.character(c(sYr:fYr)) # Year vector (for loop)
-  len <- nrow(data) # Total number of rows in the data frame
-  colLen <- length(columns)
-  month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
-  start <- 0; end <- len;
-  
-  # finds the starting point and the end of the data
-  startFound <- F
-  for(i in c(1:len)) {
-    if(substr(data[i,2], 7, 10) == as.character(sYr) & startFound == F) {
-      start <- i
-      startFound <- T
-    }
-    if(as.numeric(substr(data[i,2], 7, 10)) > fYr) {
-      end <- i - 1
-      break
-    }
-  }
-  
-  data <- data[c(start:end),]
-  
-  df <- data[c(start %>% select('Occurred.Date')
-  
-  df$year <- substr(df[,1], 7, 10)
-  df$month <- substr(df[,1], 1, 2)
-  
-  if(colLen > 0) {
-    for(i in c(1:colLen)) {
-      col <- columns[i]
-      df <- cbind(df, data[col])
-    }
-  }
-  return(df)
-}
 
 crimeCat <- getColumns(df, 2008, 2018, c('Crime.Subcategory'))
 
@@ -74,18 +35,20 @@ df_group$Category <- as.character(levels(unlist(df_group$Category)))[unlist(df_g
 crimeCat$Crime.SubcategoryIndex <- factor(crimeCat$Crime.Subcategory,
         levels=df_group$Category, labels=df_group$Index)
 
-crimeCat$Category <- 
-  ifelse(crimeCat[,3] %in% mapCrime[,2], 'Murder', 
-  ifelse(crimeCat[,3] %in% mapCrime[,3], 'Rape', 
-  ifelse(crimeCat[,3] %in% mapCrime[,4], 'Robbery', 
-  ifelse(crimeCat[,3] %in% mapCrime[,5], 'Aggravated',
-  ifelse(crimeCat[,3] %in% mapCrime[,6], 'Burglary', 
-  ifelse(crimeCat[,3] %in% mapCrime[,7], 'LarcenyTheft', 
-  ifelse(crimeCat[,3] %in% mapCrime[,8], 'VehicleTheft', 'Arson')))))))
 
-crimeCat <- crimeCat[,-3]
+
+crimeCat$Category <- 
+  ifelse(crimeCat[,5] %in% mapCrime[,2], 'Murder', 
+  ifelse(crimeCat[,5] %in% mapCrime[,3], 'Rape', 
+  ifelse(crimeCat[,5] %in% mapCrime[,4], 'Robbery', 
+  ifelse(crimeCat[,5] %in% mapCrime[,5], 'Aggravated',
+  ifelse(crimeCat[,5] %in% mapCrime[,6], 'Burglary', 
+  ifelse(crimeCat[,5] %in% mapCrime[,7], 'LarcenyTheft', 
+  ifelse(crimeCat[,5] %in% mapCrime[,8], 'VehicleTheft', 'Arson')))))))
+
+crimeCat <- crimeCat[,-5]
 violent <- c('Murder', 'Rape', 'Robbery', 'Aggravated')
-crimeCat$Violent <- ifelse(crimeCat[,3] %in% violent, T, F)
+crimeCat$Violent <- ifelse(crimeCat[,5] %in% violent, T, F)
 
 vioTable <- table(crimeCat$Violent)
 ## True : Violent, False : Property
@@ -93,8 +56,13 @@ vioTable <- table(crimeCat$Violent)
 # 426579  96750
 
 v_table <- data.frame(c(vioTable))
+tot <- sum(v_table[,1])
+per_table <- rbind(round(v_table[2,1]/tot, 4) * 100, round(v_table[1,1]/tot, 4) * 100)
+per_table <- cbind(Percent = per_table, Violent = c('Property', 'Violent'))
+colnames(per_table) <- c('Percent', 'Type')
 
-df_table <- cbind(v_table, Violent=c('Property', 'Violent'))
-colnames(df_table) <- c('Freq', 'Type')
+per_table <- as.data.frame(per_table)
+per_table$Percent <- as.numeric(as.character.factor(per_table$Percent))
 
-ggplot(data = df_table, aes(x = "", y = Freq, fill = Type)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = 1) + labs(x = "", y = "", title = "Proportion of Crime Type during the Last 10 years") + theme_minimal()
+ggplot(data = per_table[order(per_table$Percent, decreasing = T),], aes(x = "", y = Percent, fill = Type)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', start = 0) + geom_text(aes(label = paste(Percent,'%')), position = position_stack(vjust = 0.5)) + labs(x = "", y = "", title = "Proportion of Crime Type during the Last 10 years") + theme_minimal()
+
