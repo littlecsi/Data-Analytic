@@ -11,16 +11,22 @@ getColumns <- function(data, sYr, fYr, columns) {
   len <- nrow(data) # Total number of rows in the data frame
   colLen <- length(columns)
   month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
-  start <- 0
+  start <- 0; end <- len;
   
-  # finds the starting point of the data
+  # finds the starting point and the end of the data
+  startFound <- F
   for(i in c(1:len)) {
-    if(substr(data[i,2], 7, 10) == as.character(sYr)) {
+    if(substr(data[i,2], 7, 10) == as.character(sYr) & is.FALSE(startFound)) {
       start <- i
+      startFound <- T
+    }
+    if(as.numeric(substr(data[i,2], 7, 10)) > fYr) {
+      end <- i - 1
       break
     }
   }
-  data <- data[c(start:len),]
+
+  data <- data[c(start:end),]
 
   df <- data[c(start:len),] %>% select('Occurred.Date')
   
