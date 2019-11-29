@@ -1,4 +1,10 @@
 ####################################################################################################
+### 여기서 절대로 코딩 하지 마세요 !!!
+### 이곳은 코딩머신이 작업하는 공간입니다.
+### source() 함수를 사용해서 이 파일을 참조하시기 바랍니다.
+####################################################################################################
+
+####################################################################################################
 ### Functions
 getColumns <- function(data, sYr, fYr, columns) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
@@ -10,12 +16,12 @@ getColumns <- function(data, sYr, fYr, columns) {
   # finds the starting point of the data
   for(i in c(1:len)) {
     if(substr(data[i,2], 7, 10) == as.character(sYr)) {
-      cat(substr(data[i,2], 7, 10), '\n')
       start <- i
       break
     }
   }
-  
+  data <- data[c(start:len),]
+
   df <- data[c(start:len),] %>% select('Occurred.Date')
   
   df$year <- substr(df[,1], 7, 10)
@@ -29,8 +35,7 @@ getColumns <- function(data, sYr, fYr, columns) {
   }
   return(df)
 }
-
-getYrData <- function(sYr, fYr, data) {
+getYrData <- function(data, sYr, fYr) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
   month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
@@ -58,3 +63,15 @@ getYrData <- function(sYr, fYr, data) {
 
   return(df_combined)
 }
+
+####################################################################################################
+# ### Test
+library(dplyr)
+
+setwd("./topic/Crime/")
+
+df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
+
+df_combined <- getColumns(df, 2008, 2018, c("Sector"))
+
+str(df)
