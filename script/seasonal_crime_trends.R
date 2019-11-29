@@ -69,8 +69,7 @@ year_vector <- as.character(c(2008:2018))
 # in 2008
 test_08 <- as.data.frame(
   table(
-    substr(
-      subset(df01, substr(df01, 5, 8) == '2008'), 1, 2)))
+    substr(subset(df01, substr(df01, 5, 8) == '2008'), 1, 2)))
 data_2008 <- test_08$Freq
 data_2008
 
