@@ -246,7 +246,7 @@ t_season_tot
 
 t_season_tot <- transform(t_season_tot, season = factor(season, levels = c('spring', 'summer', 'fall', 'winter')))
 
-ggplot(data = t_season_tot, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', direction = -1) + labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
+ggplot(data = t_season_tot, aes(x = "", y = V1, fill = season)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', start = 0, direction = -1) + geom_text(aes(x = "", y = V1/2 + c(0, cumsum(V1)[-length(V1)]), label = paste(V1,'%')), hjust = 0.5) +  labs(x = "Year", y = "Proportion", title = "Proportion of Seasonal Average Crime Occurance during the Last 10 years") + theme_minimal()
 
 #####
 # Null hypothesis

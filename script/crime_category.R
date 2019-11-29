@@ -12,6 +12,8 @@ head(df)
 colnames(df)
 nrow(df)
 
+####################################################################################################
+### Functions
 # get columns data with date
 ## param : necessary columns
 ## return : data frame(date, param data)
@@ -20,17 +22,28 @@ getColumns <- function(data, sYr, fYr, columns) {
   len <- nrow(data) # Total number of rows in the data frame
   colLen <- length(columns)
   month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
-  start <- 0
+  start <- 0; end <- len;
   
-  # finds the starting point of the data
+  # finds the starting point and the end of the data
+  startFound <- F
   for(i in c(1:len)) {
-    if(substr(data[i,2], 7, 10) == as.character(sYr)) {
+    if(substr(data[i,2], 7, 10) == as.character(sYr) & startFound == F) {
       start <- i
+      startFound <- T
+    }
+    if(as.numeric(substr(data[i,2], 7, 10)) > fYr) {
+      end <- i - 1
       break
-    } 
+    }
   }
   
-  df <- data %>% select('Occurred.Date')
+  data <- data[c(start:end),]
+  
+  df <- data[c(start:len),] %>% select('Occurred.Date')
+  
+  df$year <- substr(df[,1], 7, 10)
+  df$month <- substr(df[,1], 1, 2)
+  
   if(colLen > 0) {
     for(i in c(1:colLen)) {
       col <- columns[i]
@@ -41,6 +54,7 @@ getColumns <- function(data, sYr, fYr, columns) {
 }
 
 crimeCat <- getColumns(df, 2008, 2018, c('Crime.Subcategory'))
+
 crimeCat <- subset(crimeCat, crimeCat$Crime.Subcategory != '')
 head(crimeCat)
 
