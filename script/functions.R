@@ -34,8 +34,8 @@ getColumns <- function(data, sYr, fYr, columns) {
 
   df <- data["Occurred.Date"]
   
-  yVec <- substr(df, 7, 10)
-  mVec <- substr(df, 1, 2)
+  yVec <- substr(unlist(df), 7, 10)
+  mVec <- substr(unlist(df), 1, 2)
 
   df$year <- yVec; df$month <- mVec;
   
