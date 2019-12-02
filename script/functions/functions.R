@@ -33,11 +33,9 @@ getColumns <- function(data, sYr, fYr, columns) {
   data <- data[c(start:end),]
 
   df <- data["Occurred.Date"]
-  
-  yVec <- substr(unlist(df), 7, 10)
-  mVec <- substr(unlist(df), 1, 2)
+  ym <- dateToYM(df, "occYear", "occMonth")
 
-  df$year <- yVec; df$month <- mVec;
+  df <- cbind(df, ym)
   
   if(colLen > 0) {
     for(i in c(1:colLen)) {
@@ -78,4 +76,16 @@ getYrData <- function(data, sYr, fYr) {
   df_combined$month <- month
 
   return(df_combined)
+}
+dateToYM <- function(dates, yearName, monthName) {
+  if(class(dates) == "data.frame") {
+    yVec <- substr(unlist(dates), 7, 10)
+    mVec <- substr(unlist(dates), 1, 2)
+
+    df <- data.frame(yVec=yVec, mVec=mVec)
+    colnames(df) <- c(as.character(yearName), as.character(monthName))
+
+    return(df)
+  }
+  cat("dateToYM function Error \n")
 }
