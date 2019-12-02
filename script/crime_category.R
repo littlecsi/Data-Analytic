@@ -5,7 +5,7 @@ library(reshape2)
 
 getwd()
 setwd('../../Data-Analytic/')
-source(file='script/functions.R')
+source(file='script/functions/functions.R')
 
 ### set work space
 setwd('dataset/Crime')
