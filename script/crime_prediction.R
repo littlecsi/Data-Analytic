@@ -118,7 +118,7 @@ trainX <- as.data.frame(lapply(trainX, normalize))
 testX <- as.data.frame(lapply(testX, normalize))
 
 # Create Model
-nnModel <- nnet(x=trainX, y=trainY, decay=5e-04, maxit=200, MaxNWts=2000, trace=T, size=c(30,30, 30), softmax=T)
+nnModel <- nnet(x=trainX, y=trainY, decay=5e-04, maxit=100, MaxNWts=2000, trace=T, size=c(30,30), softmax=T)
 
 plot.nnet(nnModel)
 
