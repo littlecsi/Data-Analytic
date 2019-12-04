@@ -2,24 +2,15 @@ library(dplyr)
 library(ggplot2)
 library(ggdark)
 
-### set work space
-setwd('topic/Crime/')
+source('database/getDB.R')
+### Main
 
-viewClassNMode <- function(data) {
-  cat('class:', class(data))
-  cat('\n','mode:', mode(data))
-}
-
-### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
-head(df)
-
-### sorting dataset to extract 'Occurred.Date' column
-df01 <- df %>% select('Occurred.Date')
-head(df01)
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+col <- c('OCC_DATE')
+df01 <- getColumns(col)
 
 ### substring years
-year <- substr(df01$Occurred.Date, 7, 10)
+year <- substr(df01$OCC_DATE, 7, 10)
 head(year)
 # [1] "1908" "1964" "1973" "1974" "1975" "1975"
 
@@ -42,7 +33,7 @@ head(df_year)
 # 6 1975    2
 
 # extracting specific years(2008~2018)
-df <- df_year[35:45,]
+df <- df_year[-12,]
 mean_occr <- mean(df$Freq)
 mean_occr
 # [1] 46084.45
@@ -79,3 +70,5 @@ ggplot(data = df, aes(x = year, y = Freq, group = 1)) +
   # geom_hline(yintercept = mean_occr, color = "orange", size = 1) +
   geom_text(aes(label = Freq), vjust = -0.3) +
   stat_smooth(method = 'lm', col = 'orange')
+
+dbDisconnectAll()

@@ -3,52 +3,45 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
-getwd()
-setwd('../../Data-Analytic/')
 source(file='script/functions/functions.R')
+source('database/getDB.R')
+### Main
 
-### set work space
-setwd('dataset/Crime')
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+col <- c('SUB_CATE')
 
 ### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
-head(df)
-colnames(df)
-nrow(df)
+crimeCat <- getColumns(col)
 
-crimeCat <- getColumns(df, 2008, 2018, c('Crime.Subcategory'))
-
-crimeCat <- subset(crimeCat, crimeCat$Crime.Subcategory != '')
+crimeCat <- subset(crimeCat, crimeCat$SUB_CATE != '')
 head(crimeCat)
 
-group <- unique(crimeCat$Crime.Subcategory)
+group <- unique(crimeCat$SUB_CATE)
 df_group <- data.frame(Category = group, Index = c(1:length(group)))
 df_group
 
-mapCrime <- read.csv('group_crime.csv', header = T, stringsAsFactors = F)
+mapCrime <- read.csv('dataset/Crime/group_crime.csv', header = T, stringsAsFactors = F)
 
 for(i in c(1:ncol(mapCrime))) {
   mapCrime[,i] <- ifelse(is.na(mapCrime[,i]), 0, mapCrime[,i])
 }
 
 df_group$Category <- as.character(levels(unlist(df_group$Category)))[unlist(df_group$Category)]
-crimeCat$Crime.SubcategoryIndex <- factor(crimeCat$Crime.Subcategory,
+crimeCat$Crime.SubcategoryIndex <- factor(crimeCat$SUB_CATE,
         levels=df_group$Category, labels=df_group$Index)
 
-
-
 crimeCat$Category <- 
-  ifelse(crimeCat[,5] %in% mapCrime[,2], 'Murder', 
-  ifelse(crimeCat[,5] %in% mapCrime[,3], 'Rape', 
-  ifelse(crimeCat[,5] %in% mapCrime[,4], 'Robbery', 
-  ifelse(crimeCat[,5] %in% mapCrime[,5], 'Aggravated',
-  ifelse(crimeCat[,5] %in% mapCrime[,6], 'Burglary', 
-  ifelse(crimeCat[,5] %in% mapCrime[,7], 'LarcenyTheft', 
-  ifelse(crimeCat[,5] %in% mapCrime[,8], 'VehicleTheft', 'Arson')))))))
+  ifelse(crimeCat[,2] %in% mapCrime[,2], 'Murder', 
+  ifelse(crimeCat[,2] %in% mapCrime[,3], 'Rape', 
+  ifelse(crimeCat[,2] %in% mapCrime[,4], 'Robbery', 
+  ifelse(crimeCat[,2] %in% mapCrime[,5], 'Aggravated',
+  ifelse(crimeCat[,2] %in% mapCrime[,6], 'Burglary', 
+  ifelse(crimeCat[,2] %in% mapCrime[,7], 'LarcenyTheft', 
+  ifelse(crimeCat[,2] %in% mapCrime[,8], 'VehicleTheft', 'Arson')))))))
 
-crimeCat <- crimeCat[,-5]
+crimeCat <- crimeCat[,-2]
 violent <- c('Murder', 'Rape', 'Robbery', 'Aggravated')
-crimeCat$Violent <- ifelse(crimeCat[,5] %in% violent, T, F)
+crimeCat$Violent <- ifelse(crimeCat[,2] %in% violent, T, F)
 
 vioTable <- table(crimeCat$Violent)
 ## True : Violent, False : Property

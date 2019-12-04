@@ -25,5 +25,8 @@ dbDisconnectAll <- function(){
 # Get Columns from Database
 ## param : vector
 getColumns <- function(col) {
-  
+  query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ') ," FROM SEATTLE_CRIME")
+  res <- dbGetQuery(conn, query01)
+  return(res)
 }
+

@@ -3,8 +3,13 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 
-### set work space
-setwd('topic/Crime/')
+source('database/getDB.R')
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+
+### dataset
+df01 <- getColumns('OCC_DATE')
+
+### Function
 
 # function get Seasonal Average
 ## param : season data (data frame)
@@ -44,22 +49,14 @@ transDf <- function(season) {
   return(transposedData)
 }
 
-### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
-head(df)
-
-### sorting dataset to extract 'Occurred.Date' column
-df01 <- df %>% 
-  select('Occurred.Date')
-head(df01)
 
 ### 2008 ~ 2019 data
 # hard-coding is the best!!!!! 
 # View(substr(df01$Occurred.Date, 7, 10) == '2008')
 # df$Occurred.Date[1037] is TRUE
-df01 <- substr(df01$Occurred.Date[1037:nrow(df01)], 1, 10)
 head(df01)
-df01 <- gsub('/','', df01)
+
+df01 <- gsub('/','', df01$OCC_DATE)
 head(df01)
 
 # year vector variable
@@ -265,3 +262,4 @@ resultChisq$p.value > 0.05
 
 ## Reject Null Hypothesis
 ### Therefore, There is a difference in seasonal crime rates.
+
