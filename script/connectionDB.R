@@ -23,14 +23,14 @@ conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crim
 ## param : data frame
 dbSend <- function(df) {
   len <- nrow(df)
-  pb <- progress_bar$new(format = "[:bar] :current/:total (:percent)", total = len)
+  pb <- progress_bar$new(format = "Inserting [:bar] :current/:total (:percent) eta: :eta :elapsedfull", 
+                         total = len, clear = F)
   
   for(l in c(1:len)) {
     query01 <- paste("INSERT INTO SEATTLE_CRIME VALUES(REP_NUM, \'", df$Occurred.Date[l], "\', ", df$Occurred.Time[l], ", \'", df$Reported.Date[l], "\', ", df$Reported.Time[l], ", \'", df$Crime.Subcategory[l], "\', \'", df$Primary.Offense.Description[l], "\', \'", df$Precinct[l], "\', \'", df$Sector[l], "\', \'", df$Beat[l], "\', \'", df$Neighborhood[l], "\')",  sep = '')
     # cat(query01, '\n')
     dbSendQuery(conn, query01)
-    pb$tick(0)
-    pb$tick(1)
+    pb$tick()
   }
   cat('FIN\n')
 }
