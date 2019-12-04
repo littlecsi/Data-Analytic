@@ -23,7 +23,7 @@ conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crim
 ## param : data frame
 dbSend <- function(df) {
   len <- nrow(df)
-  pb <- progress_bar$new(format = "Inserting [:bar] :current/:total (:percent) eta: :eta :elapsedfull", 
+  pb <- progress_bar$new(format = "Inserting [:bar] :current/:total (:percent) eta::eta elapsed::elapsedfull", 
                          total = len, clear = F)
   
   for(l in c(1:len)) {
