@@ -1,0 +1,29 @@
+library(dplyr)
+library(ggplot2)
+library(ggdark)
+library(reshape2)
+library(DBI)
+library(RMySQL)
+library(stringr)
+library(openxlsx)
+library(progress)
+
+### Variable and Option
+
+# MySQL DB Connect 
+conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="localhost")
+
+### Function
+
+# Database Disconnect All Function
+dbDisconnectAll <- function(){
+  ile <- length(dbListConnections(MySQL())  )
+  lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
+  cat(sprintf("%s connection(s) closed.\n", ile))
+}
+
+# Get Columns from Database
+## param : vector
+getColumns <- function(col) {
+  
+}
