@@ -10,7 +10,7 @@ library(dplyr)
 
 ####################################################################################################
 ### Functions
-getColumns <- function(data, sYr, fYr, columns) {
+getColumnsDF <- function(data, sYr, fYr, columns) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
   colLen <- length(columns)
@@ -32,7 +32,7 @@ getColumns <- function(data, sYr, fYr, columns) {
 
   data <- data[c(start:end),]
 
-  df <- data["Occurred.Date"]
+  df <- data["OCC_DATE"]
   ym <- dateToYM(df, "occYear", "occMonth")
 
   df <- cbind(df, ym)
@@ -59,7 +59,7 @@ getYrData <- function(data, sYr, fYr) {
   }
 
   # Extract only the data required.
-  dates <- data %>% select("Occurred.Date")
+  dates <- data %>% select("OCC_DATE")
   dates <- as.character(levels(unlist(dates)))[unlist(dates)]
   dates <- gsub("/", "", dates[c(start:len)])
   

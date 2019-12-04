@@ -6,72 +6,39 @@ library(ggdark)
 library(reshape2)
 library(stringr)
 
-####################################################################################################
-### set work space
-# setwd('topic/Crime/')
-# Lee's directory
-setwd("D:/GitHub/Data-Analytic/topic/Crime/")
+source('script/functions/functions.R')
+source('database/getDB.R')
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
 
-####################################################################################################
 ### dataset
-df <- read.csv('Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
+df <- getColumns('*')
 head(df)
-
-####################################################################################################
-### Functions
-getColumns <- function(data, sYr, fYr, columns) {
-  year <- as.character(c(sYr:fYr)) # Year vector (for loop)
-  len <- nrow(data) # Total number of rows in the data frame
-  colLen <- length(columns)
-  month <- c('01','02','03','04','05','06','07','08','09','10','11','12')
-  start <- 0
-  
-  # finds the starting point of the data
-  for(i in c(1:len)) {
-    if(substr(data[i,2], 7, 10) == as.character(sYr)) {
-      cat(substr(data[i,2], 7, 10), '\n')
-      start <- i
-      break
-    }
-  }
-  
-  df <- data[c(start:len),] %>% select('Occurred.Date')
-  
-  df$year <- substr(df[,1], 7, 10)
-  df$month <- substr(df[,1], 1, 2)
-  
-  if(colLen > 0) {
-    for(i in c(1:colLen)) {
-      col <- columns[i]
-      df <- cbind(df, data[col])
-    }
-  }
-  return(df)
-}
 
 ####################################################################################################
 ### Main
 
-df_combined <- getColumns(df, 2008, 2018, c())
+df_combined <- getColumnsDF(df, 2008, 2018, c())
 
 ### making a line graph
-df_channged <- melt(df_combined, id = 'month')
-df_channged
+df_changed <- as.data.frame(table(df_combined[,-1]))
 
-graph01 <- ggplot(df_channged, aes(x = month, y = value)) +
-  geom_line(aes(colour = variable, group = variable))  +
+graph01 <- ggplot(df_changed, aes(x = occMonth, y = Freq)) +
+  geom_line(aes(color = occYear, group = occYear))  +
   labs(x = "Month", y = "Frequency", title = "The Number of Monthly Crime Occurrences per Each Year", color='Year') + dark_theme_grey()
 
 ### calculating average values & adding a new column
+mx_table <- as.matrix(table(df_combined[,-1]))
+ncol(mx_table)
 average <- c()
 for(i in c(1:12)) {
-  average <- c(average, round(mean(as.numeric(df_combined[i,-12])), 0))
+  average <- c(average, round(mean(as.numeric(mx_table[,i])), 0))
 }
-average
-df_combined$avg <- average
-df_combined
+
+avg <- as.data.frame(average)
+avg <- cbind(avg, month = unique(df_combined$occMonth))
 
 ### adding a new line on graph01
 graph02 <- graph01 + 
-  geom_line(aes(x=month, avg, group=1), data=df_combined[,12:13], linetype='longdash', size = 1)
+  geom_line(aes(x = month, y = average, group=1), data=avg, linetype='longdash', size = 1, inherit.aes = FALSE)
 graph02
+
