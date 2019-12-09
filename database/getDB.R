@@ -16,6 +16,8 @@ conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crim
 ### Function
 
 # Database Disconnect All Function
+## param : none
+## return : none
 dbDisconnectAll <- function(){
   ile <- length(dbListConnections(MySQL())  )
   lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
@@ -24,9 +26,16 @@ dbDisconnectAll <- function(){
 
 # Get Columns from Database
 ## param : vector
+## return : result set
 getColumns <- function(col) {
   query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ') ," FROM SEATTLE_CRIME")
   res <- dbGetQuery(conn, query01)
   return(res)
 }
 
+# Simple Query Sending Function
+## param : query(text)
+## return : result set
+sendQuery <- function(query) {
+  return(dbGetQuery(conn, query01))
+}
