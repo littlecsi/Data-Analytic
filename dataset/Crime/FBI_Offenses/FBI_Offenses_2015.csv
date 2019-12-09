@@ -1,12 +1,4 @@
-year,City,Population,"Violent
-crime","Murder and
-nonnegligent
-manslaughter",rape,Robbery,"Aggravated
-assault","Property
-crime",Burglary,"Larceny-
-theft","Motor
-vehicle
-theft",Arson
+Year,City,Population,Violent crime,Murder,Rape,Robbery,Aggravated assault,Property crime,Burglary,Larceny theft,Motor vehicle theft,Arson
 2015,Aberdeen,"16,100",96,1,10,29,56,874,257,557,60,2
 2015,Airway Heights,"6,652",6,0,0,6,0,353,65,263,25,0
 2015,Algona,"3,158",2,0,2,0,0,71,15,49,7,0

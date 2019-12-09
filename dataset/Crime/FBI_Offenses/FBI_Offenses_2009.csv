@@ -1,4 +1,4 @@
-year,City,Population,Violent crime,Murder and nonnegligent manslaughter,Forcible rape,Robbery,Aggravated assault,Property crime,Burglary,Larceny-theft,Motor vehicle theft,Arson
+Year,City,Population,Violent crime,Murder,Rape,Robbery,Aggravated assault,Property crime,Burglary,Larceny theft,Motor vehicle theft,Arson
 2009,Aberdeen,"16,000",68,0,6,28,34,"1,010",198,734,78,5
 2009,Airway Heights,"5,384",12,0,0,2,10,132,35,83,14,0
 2009,Algona,"2,763",12,0,3,0,9,24,3,16,5,0

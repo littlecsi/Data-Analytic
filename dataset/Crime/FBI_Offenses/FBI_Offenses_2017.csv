@@ -1,12 +1,4 @@
-year,State,Population,"Violent
-crime","Murder and
-nonnegligent
-manslaughter",Rape,Robbery,"Aggravated
-assault","Property
-crime",Burglary,"Larceny-
-theft","Motor
-vehicle
-theft",Arson
+Year,City,Population,Violent crime,Murder,Rape,Robbery,Aggravated assault,Property crime,Burglary,Larceny theft,Motor vehicle theft,Arson
 2017,Aberdeen,"16,243",85,0,15,22,48,753,138,554,61,6
 2017,Airway Heights,"8,460",11,1,1,2,7,268,31,209,28,0
 2017,Algona,"3,177",2,0,0,1,1,52,14,36,2,0

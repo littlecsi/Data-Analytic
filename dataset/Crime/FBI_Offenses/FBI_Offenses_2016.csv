@@ -1,12 +1,4 @@
-year,City,Population,"Violent
-crime","Murder and
-nonnegligent
-manslaughter",Rape,Robbery,"Aggravated
-assault","Property
-crime",Burglary,"Larceny-
-theft","Motor
-vehicle
-theft",Arson
+Year,City,Population,Violent crime,Murder,Rape,Robbery,Aggravated assault,Property crime,Burglary,Larceny theft,Motor vehicle theft,Arson
 2016,Aberdeen,"16,155",74,1,8,19,46,711,160,501,50,5
 2016,Algona,"3,166",2,0,1,0,1,49,16,31,2,0
 2016,Anacortes,"16,532",15,0,1,4,10,463,65,369,29,2
