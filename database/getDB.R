@@ -28,7 +28,17 @@ dbDisconnectAll <- function(){
 ## param : vector
 ## return : result set
 getColumns <- function(col) {
-  query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ') ," FROM SEATTLE_CRIME")
+  query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ')," FROM SEATTLE_CRIME")
+  res <- dbGetQuery(conn, query01)
+  return(res)
+}
+
+# Get FBI Data by year
+## param : vector
+## return : result set
+getFBIData <- function(year) {
+  query01 <- paste("SELECT * FROM FBI_DATA WHERE YEAR LIKE", str_c(year, sep = '', collapse = ' or year like '))
+  cat(query01, '\n')
   res <- dbGetQuery(conn, query01)
   return(res)
 }
