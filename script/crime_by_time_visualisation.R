@@ -1,22 +1,19 @@
 ####################################################################################################
-### Library
+##### Library
 library(dplyr)
 library(ggplot2)
 library(ggdark)
 library(reshape2)
 library(jsonlite)
+library(progress)
 
 library(plotly)
 library(car)
 
 ####################################################################################################
-### Import
+##### Import
 source("script/functions/functions.R")
 source("database/getDB.R")
-
-####################################################################################################
-### Variables
-
 
 ####################################################################################################
 ##### Main
@@ -58,9 +55,9 @@ beats <- intersect(beatJSON, beatCrime)
 crime_beat <- crimeData %>% subset(BEAT %in% beats)
 
 ##################################################
-##### 3D Plot "Car Prowl" - category, time, beat
+##### 3D Plot category, time, sector, frequency
 
-### Categorize OCC_TIME and RPE_TIME
+### Categorize OCC_TIME and REP_TIME
 plot3dDF <- crime_beat[c("OCC_TIME", "SUB_CATE", "BEAT")]
 
 ### Group Beats to Sectors
@@ -74,14 +71,14 @@ plot3dData <- plot3dDF[c("OCC_TIME", "SUB_CATE", "SECTOR")]
 catData <- as.data.frame(rename(count(plot3dData, OCC_TIME, SUB_CATE, SECTOR), FREQ=n))
 
 ### Only treat data if frequency is higher than 10
-catData <- catData %>% subset(FREQ > 10)
+catData <- catData %>% subset(FREQ > 50)
 
 ### Changing columns data into integers for plotting
 catData$SUB_CATE <- as.factor(catData$SUB_CATE)
 catData$SECTOR <- as.factor(catData$SECTOR)
 
 ### 3D Scatter Plot with Color Scaling
-plot1 <- plot_ly(catData, x=~OCC_TIME, y=~SUB_CATE, z=~SECTOR, size=0.1,
+plot1 <- plot_ly(catData, x=~OCC_TIME, y=~SUB_CATE, z=~SECTOR,
                  marker=list(color=~FREQ, colorscale=c("#FFE1A1", "#683531"), showscale=T)) %>% 
   add_markers() %>% 
   layout(scene=list(xaxis=list(title="Occured Time"),
@@ -94,9 +91,24 @@ plot1 <- plot_ly(catData, x=~OCC_TIME, y=~SUB_CATE, z=~SECTOR, size=0.1,
            showarrow=F
          ))
 plot1
+# Sectors B, D, Q, U, J, W have very large frequencies of Car Prowl
 
 ##################################################
 ##### Crime by Beat visualisation
-# crime_beat$SECTOR <- substr(crime_beat$BEAT, 1, 1)
+
+### Graph of Crime Frequency by Sectors
+freqDF <- crime_beat[c("OCC_TIME", "SUB_CATE", "BEAT")]
+freqDF$SECTOR <- substr(freqDF$BEAT, 1, 1)
+freqDF <- subset(freqDF, SUB_CATE != "")
+
+### barplot data
+freqDF <- as.data.frame(table(freqDF$SECTOR))
+colnames(freqDF) <- c("Sector", "Frequency")
+
+### barplot drawing
+plot2 <- ggplot(data=freqDF, mapping=aes(x=Sector, y=Frequency)) +
+  geom_bar(aes(color=Sector, fill=Sector), stat="identity", show.legend=F) + 
+  theme(axis.line = element_line(colour = "black", size = 1, linetype = "solid"))
+plot2
 
 dbDisconnectAll()
