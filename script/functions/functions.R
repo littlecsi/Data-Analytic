@@ -10,6 +10,9 @@ library(dplyr)
 
 ####################################################################################################
 ### Functions
+cutMonthYear <- function(df) {
+  tmp <- df[,-1]
+}
 getColumnsDF <- function(data, sYr, fYr, columns) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
