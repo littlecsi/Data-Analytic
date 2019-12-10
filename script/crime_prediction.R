@@ -100,19 +100,51 @@ for(f in factors) {
 # Reorder Data Frame and remove unnecessary columns
 neData <- neData[c("oMonth","rMonth","rHour","Beat")]
 
+# recode beat data
+unique(neData[4])
+neData$Beat2[neData$Beat == 'B1'] <- 1
+neData$Beat2[neData$Beat == 'B2'] <- 2
+neData$Beat2[neData$Beat == 'C1'] <- 3
+neData$Beat2[neData$Beat == 'D1'] <- 4
+neData$Beat2[neData$Beat == 'D2'] <- 5
+neData$Beat2[neData$Beat == 'D3'] <- 6
+neData$Beat2[neData$Beat == 'E1'] <- 7
+neData$Beat2[neData$Beat == 'E2'] <- 8
+neData$Beat2[neData$Beat == 'E3'] <- 9
+neData$Beat2[neData$Beat == 'J3'] <- 10
+neData$Beat2[neData$Beat == 'K1'] <- 11
+neData$Beat2[neData$Beat == 'K2'] <- 12
+neData$Beat2[neData$Beat == 'K3'] <- 13
+neData$Beat2[neData$Beat == 'L1'] <- 14
+neData$Beat2[neData$Beat == 'L2'] <- 15
+neData$Beat2[neData$Beat == 'M1'] <- 16
+neData$Beat2[neData$Beat == 'M2'] <- 17
+neData$Beat2[neData$Beat == 'M3'] <- 18
+neData$Beat2[neData$Beat == 'N2'] <- 19
+neData$Beat2[neData$Beat == 'N3'] <- 20
+neData$Beat2[neData$Beat == 'Q1'] <- 21
+neData$Beat2[neData$Beat == 'Q2'] <- 22
+neData$Beat2[neData$Beat == 'Q3'] <- 23
+neData$Beat2[neData$Beat == 'U1'] <- 24
+neData$Beat2[neData$Beat == 'U2'] <- 25
+neData$Beat2[neData$Beat == 'U3'] <- 26
+
 ##############################
 ### nnet package
 # One-Hot Encoding
 beat.ind <- class.ind(neData$Beat)
-neData <- cbind(neData, beat.ind)
+neData_ind <- cbind(neData, beat.ind)
 
 # Training and Testing Data
-idx <- sample(c(1:nrow(neData)), 0.8*nrow(neData))
-trainData <- neData[idx,]
-testData <- neData[-idx,]
+idx <- sample(c(1:nrow(neData_ind)), 0.8*nrow(neData_ind))
 
-trainX <- trainData[,c(1:3)]; trainY <- trainData[,c(5:30)];
-testX <- testData[,c(1:3)];
+trainData <- neData_ind[idx,]
+testData <- neData_ind[-idx,]
+
+trainX <- trainData[,c(1:3)]
+trainY <- trainData[,c(5:30)]
+
+testX <- testData[,c(1:3)]
 
 # Data Normalisation
 trainX <- as.data.frame(lapply(trainX, normalize))
@@ -120,12 +152,30 @@ testX <- as.data.frame(lapply(testX, normalize))
 
 # Create Model
 # nnModel <- nnet(x=trainX, y=trainY, decay=5e-04, maxit=100, MaxNWts=2000, trace=T, size=c(30,30), softmax=T)
-nnModel <- nnet(x = trainX, y = trainY, size = 10, maxit = 100, softmax = T)
+# nnModel <- nnet(x = trainX, y = trainY, size = 10, maxit = 100, softmax = T)
 
-plot.nnet(nnModel)
 
-nnPred <- predict(nnModel, testX, type="class")
-nnPredTable <- table(nnPred, testData$Beat)
-predAccuracy <- calcAcc(nnPredTable)
-cat(predAccuracy, "% \n", sep="")
+# plot.nnet(nnModel)
+# 
+# nnPred <- predict(nnModel, testX, type="class")
+# nnPredTable <- table(nnPred, testData$Beat)
+# predAccuracy <- calcAcc(nnPredTable)
+# cat(predAccuracy, "% \n", sep="")
 
+# Neuralnet 
+
+unique(neData$Beat2)
+table(neData$Beat2)
+head(neData)
+
+nen_Data <- neData[-4]
+
+nnModel <- neuralnet(Beat2 ~ ., data = nen_Data, hidden = 1)
+nnModel
+plot(nnModel)
+
+# Model performance evaluation
+nnModel_Res <- compute(nnModel, nen_Data[c(1:4)])
+
+# cor
+cor(nnModel_Res$net.result, neData[5])
