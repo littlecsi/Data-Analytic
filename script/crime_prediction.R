@@ -1,8 +1,4 @@
 ####################################################################################################
-### Library
-library(ggplot2)
-
-####################################################################################################
 ### Import
 source("script/functions/functions.R")
 source("script/functions/mlfunctions.R")
@@ -10,17 +6,15 @@ source("database/getDB.R")
 
 ####################################################################################################
 ### Importing Data
-# df <- read.csv('dataset/Crime/Seattle_Crime_Data.csv', header = T, stringsAsFactors = F)
-# colnames(df)
 
 # Get required Columns
 reqCol <- c("OCC_DATE", "REP_DATE","REP_TIME","SUB_CATE","PRI_DESC", "BEAT", "NEIGHBOR")
+
+# get DB
 cdf <- getColumns(reqCol)
-tmp <- cdf[, -1]
-cdf <- as.data.frame(cdf[, 1])
-cdf$year <- str_sub(cdf[, 1], 7, 10)
-cdf$month <- str_sub(cdf[, 1], 1, 2)
-cdf <- cbind(cdf, tmp)
+# add Year and Month col
+cdf <- cutMonthYear(cdf)
+
 str(cdf)
 
 # Finding the Frequency of each crime category
@@ -121,15 +115,17 @@ trainX <- trainData[,c(1:3)]; trainY <- trainData[,c(5:30)];
 testX <- testData[,c(1:3)];
 
 # Data Normalisation
-trainX <- as.data.frame(lapply(trainX, nomalize))
-testX <- as.data.frame(lapply(testX, nomalize))
+trainX <- as.data.frame(lapply(trainX, normalize))
+testX <- as.data.frame(lapply(testX, normalize))
 
 # Create Model
-nnModel <- nnet(x=trainX, y=trainY, decay=5e-04, maxit=100, MaxNWts=2000, trace=T, size=c(30,30), softmax=T)
+# nnModel <- nnet(x=trainX, y=trainY, decay=5e-04, maxit=100, MaxNWts=2000, trace=T, size=c(30,30), softmax=T)
+nnModel <- nnet(x = trainX, y = trainY, size = 10, maxit = 100, softmax = T)
 
 plot.nnet(nnModel)
 
 nnPred <- predict(nnModel, testX, type="class")
-nnPredTable <- table(nnPred, testData$BEAT)
+nnPredTable <- table(nnPred, testData$Beat)
 predAccuracy <- calcAcc(nnPredTable)
 cat(predAccuracy, "% \n", sep="")
+

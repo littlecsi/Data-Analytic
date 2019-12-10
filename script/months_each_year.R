@@ -10,20 +10,18 @@ source('script/functions/functions.R')
 source('database/getDB.R')
 # OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
 
-### dataset
-df <- getColumns('*')
-head(df)
-
 ####################################################################################################
 ### Main
 
-df_combined <- getColumnsDF(df, 2008, 2018, c())
+### dataset
+df <- getColumns('OCC_DATE')
+df_combined <- cutMonthYear(df)
 
 ### making a line graph
 df_changed <- as.data.frame(table(df_combined[,-1]))
 
-graph01 <- ggplot(df_changed, aes(x = occMonth, y = Freq)) +
-  geom_line(aes(color = occYear, group = occYear))  +
+graph01 <- ggplot(df_changed, aes(x = month, y = Freq)) +
+  geom_line(aes(color = year, group = year))  +
   labs(x = "Month", y = "Frequency", title = "The Number of Monthly Crime Occurrences per Each Year", color='Year') + dark_theme_grey()
 
 ### calculating average values & adding a new column
@@ -35,10 +33,9 @@ for(i in c(1:12)) {
 }
 
 avg <- as.data.frame(average)
-avg <- cbind(avg, month = unique(df_combined$occMonth))
+avg <- cbind(avg, month = unique(df_combined$month))
 
 ### adding a new line on graph01
 graph02 <- graph01 + 
   geom_line(aes(x = month, y = average, group=1), data=avg, linetype='longdash', size = 1, inherit.aes = FALSE)
 graph02
-

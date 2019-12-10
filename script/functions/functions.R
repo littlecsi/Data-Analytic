@@ -10,9 +10,27 @@ library(dplyr)
 
 ####################################################################################################
 ### Functions
-cutMonthYear <- function(df) {
-  tmp <- df[,-1]
+
+# Normalize Function
+## Min-Max Algorithm
+## param : vector
+## return : Normalized Vector
+normalize <- function(x) { 
+  return((x - min(x)) / (max(x) - min(x)))
 }
+
+# Add Year and Month Columns
+## param : data frame
+## return : data frame
+cutMonthYear <- function(df) {
+  tmp <- df[, -1]
+  df <- as.data.frame(df[, 1])
+  df$year <- str_sub(df[, 1], 7, 10)
+  df$month <- str_sub(df[, 1], 1, 2)
+  df <- cbind(df, tmp)
+  return(df)
+}
+
 getColumnsDF <- function(data, sYr, fYr, columns) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
