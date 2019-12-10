@@ -29,6 +29,7 @@ dbDisconnectAll <- function(){
 ## return : result set
 getColumns <- function(col) {
   query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ')," FROM SEATTLE_CRIME")
+  cat('\n', query01, '\n')
   res <- dbGetQuery(conn, query01)
   return(res)
 }
@@ -38,7 +39,7 @@ getColumns <- function(col) {
 ## return : result set
 getFBIData <- function(year) {
   query01 <- paste("SELECT * FROM FBI_DATA WHERE YEAR LIKE", str_c(year, sep = '', collapse = ' or year like '))
-  cat(query01, '\n')
+  cat('\n', query01, '\n')
   res <- dbGetQuery(conn, query01)
   return(res)
 }
@@ -47,5 +48,6 @@ getFBIData <- function(year) {
 ## param : query(text)
 ## return : result set
 sendQuery <- function(query) {
+  cat('\n', query, '\n')
   return(dbGetQuery(conn, query01))
 }
