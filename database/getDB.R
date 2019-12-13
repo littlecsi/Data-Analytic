@@ -44,6 +44,17 @@ getFBIData <- function(year) {
   return(res)
 }
 
+# Get Edu Data
+## param : vector
+## return : result set
+## param_val : all columns
+getEduData <- function() {
+  query01 <- paste("SELECT * FROM usa_univ_completions")
+  cat('\n', query01, '\n')
+  res <- dbGetQuery(conn, query01)
+  return(res)
+}
+
 # Simple Query Sending Function
 ## param : query(text)
 ## return : result set
