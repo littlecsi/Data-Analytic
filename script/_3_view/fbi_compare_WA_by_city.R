@@ -1,3 +1,4 @@
+library(gridExtra)
 
 source("script/_2_functions/functions.R")
 source("script/_1_database/getDB.R")
@@ -8,6 +9,9 @@ source("script/_1_database/getDB.R")
 getTop10City <- function(year_vec, type) {
   pb <- progress_bar$new(format = "Inserting [:bar] :current/:total (:percent) elapsed::elapsedfull", total = length(year_vec), clear = F)
   
+  # list init
+  plot_p <- NULL
+  plot_idx <- 1
   for(i in year_vec) {
     data01 <- getFBIData(i)
     data01$Total <- data01$VIOLENT_CRIME + data01$PROPERTY_CRIME
@@ -34,7 +38,7 @@ getTop10City <- function(year_vec, type) {
       plot_main <- paste("Top 20 ", i, " Property Crimes Ratio in WA", sep = '')
     }
     top10 <- data01 %>% arrange(desc(data01$Target)) %>% head(20)
-    plot1 <- 
+    plot_p[plot_idx] <- 
       ggplot(data = top10, 
              aes(x = CITY, y = Target, fill = factor(ifelse(
                CITY == 'Seattle', 'Normal', 'Highlighted')))) + 
@@ -44,9 +48,14 @@ getTop10City <- function(year_vec, type) {
       scale_x_discrete(limit = top10$CITY) +
       scale_fill_manual(name = 'CITY', values = c('grey50', 'red')) + 
       theme(legend.position = 'none')
-    print(plot1)
+    plot_idx <- plot_idx + 1
     pb$tick()
   }
+  print(class(plot_p))
+  print(length(plot_p))
+  print(str(plot_p))
+  
+  do.call("grid.arrange", c(plot_p, ncol = 4))
 }
 
 ### Main
