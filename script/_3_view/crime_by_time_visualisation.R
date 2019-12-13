@@ -12,8 +12,8 @@ library(car)
 
 ####################################################################################################
 ##### Import
-source("script/functions/functions.R")
-source("database/getDB.R")
+source("script/_2_functions/functions.R")
+source("script/_1_database/getDB.R")
 
 ####################################################################################################
 ##### Main

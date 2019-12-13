@@ -3,7 +3,8 @@ library(dplyr)
 library(reshape2)
 library(stringr)
 
-source(file = "database/getDB.R")
+source("script/_2_functions/functions.R")
+source("script/_1_database/getDB.R")
 
 # Print Edu Plot
 df_Edu <- getEduData()
