@@ -7,6 +7,10 @@
 ####################################################################################################
 ### Library
 library(dplyr)
+library(ggdark)
+library(reshape2)
+library(stringr)
+library(ggplot2)
 
 ####################################################################################################
 ### Functions
@@ -65,6 +69,7 @@ getColumnsDF <- function(data, sYr, fYr, columns) {
   }
   return(df)
 }
+
 getYrData <- function(data, sYr, fYr) {
   year <- as.character(c(sYr:fYr)) # Year vector (for loop)
   len <- nrow(data) # Total number of rows in the data frame
@@ -98,6 +103,7 @@ getYrData <- function(data, sYr, fYr) {
 
   return(df_combined)
 }
+
 dateToYM <- function(dates, yearName, monthName) {
   if(class(dates) == "data.frame") {
     yVec <- substr(unlist(dates), 7, 10)
