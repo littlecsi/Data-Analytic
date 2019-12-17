@@ -62,3 +62,4 @@ getTop10City(setYear, 'Pb')
 # getTop10City(setYear, 'V')
 # getTop10City(setYear, 'Pp')
  
+dbDisconnectAll()

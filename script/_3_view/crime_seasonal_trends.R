@@ -186,3 +186,5 @@ resultChisq$p.value > 0.05
 
 ## Reject Null Hypothesis
 ### Therefore, There is a difference in seasonal crime rates.
+
+dbDisconnectAll()

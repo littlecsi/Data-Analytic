@@ -32,3 +32,5 @@ avg <- cbind(avg, month = unique(df_combined$month))
 graph02 <- graph01 + 
   geom_line(aes(x = month, y = average, group=1), data=avg, linetype='longdash', size = 1, inherit.aes = FALSE)
 graph02
+
+dbDisconnectAll()

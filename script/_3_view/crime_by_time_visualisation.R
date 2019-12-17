@@ -5,7 +5,6 @@ library(ggplot2)
 library(ggdark)
 library(reshape2)
 library(jsonlite)
-library(progress)
 
 library(plotly)
 library(car)
@@ -43,7 +42,7 @@ col <- c("OCC_TIME", "SUB_CATE", "BEAT")
 crimeData <- getColumns(col)
 
 ### Get Json File - Beat Area
-map <- fromJSON("database/seattle_beat.json")
+map <- fromJSON("script/_1_database/seattle_beat.json")
 BeatDF <- map$features$attributes[,c(2,5)]
 
 beatJSON <- unique(map$features$attributes$beat)

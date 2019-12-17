@@ -59,3 +59,4 @@ per_table$Percent <- as.numeric(as.character.factor(per_table$Percent))
 
 ggplot(data = per_table[order(per_table$Percent, decreasing = T),], aes(x = "", y = Percent, fill = Type)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', start = 0) + geom_text(aes(label = paste(Percent,'%')), position = position_stack(vjust = 0.5)) + labs(x = "", y = "", title = "Proportion of Crime Type during the Last 10 years") + theme_minimal()
 
+dbDisconnectAll()
