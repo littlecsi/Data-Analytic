@@ -1,6 +1,6 @@
 library(shiny)
 
-
+source('script/_3_view/crime_months_each_year.R')
 # *Page(), *Panel() 등의 함수로 위치를 나누고 모양을 결정
 ui <- fluidPage(
   # *Input() 함수로 입력을 받는 요소들을 배치
@@ -27,14 +27,14 @@ ui <- fluidPage(
     ),
     mainPanel(
       plotOutput(
-        outputId = "plot1"
+        outputId = "graph02"
       )
     )
   )
 )
 server <- function(input, output){
-  output$plot1 <- renderPlot({
-    plot(input$slider1)
+  output$graph02 <- renderPlot({
+    graph02
   })
 }
 shinyApp(ui = ui, server = server)

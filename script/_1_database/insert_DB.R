@@ -38,7 +38,7 @@ edu_csv[is.na(edu_csv)] <- 0
 str(edu_csv)
 
 # MySQL DB Connect 
-conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="localhost")
+conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="ec2-13-209-74-172.ap-northeast-2.compute.amazonaws.com")
 
 ### Function
 
@@ -135,12 +135,12 @@ dbDisconnectAll <- function(){
 
 # Database Send
 ## Seattle Crime Data
-# dbCreateSeattleTable()
-# dbSendSeattleCrime(df)
+dbCreateSeattleTable()
+dbSendSeattleCrime(df)
 
 ## FBI Data
-# dbCreateFBITable()
-# dbSendFBIData(fbi_csv)
+dbCreateFBITable()
+dbSendFBIData(fbi_csv)
 
 ## Univ Completions data
 dbCreateUnivTable()

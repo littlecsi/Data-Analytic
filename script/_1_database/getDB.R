@@ -11,7 +11,7 @@ library(progress)
 ### Variable and Option
 
 # MySQL DB Connect 
-conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="localhost")
+conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="ec2-13-209-74-172.ap-northeast-2.compute.amazonaws.com")
 
 ### Function
 
@@ -60,5 +60,5 @@ getEduData <- function() {
 ## return : result set
 sendQuery <- function(query) {
   cat('\n', query, '\n')
-  return(dbGetQuery(conn, query01))
+  return(dbGetQuery(conn, query))
 }
