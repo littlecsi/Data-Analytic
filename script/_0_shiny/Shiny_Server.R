@@ -1,9 +1,21 @@
-
+# shiny server
 server <- function(input, output){
-  output$graph01 <- reactive({
-    get(input$slider1)
+  selectedData <- reactive({
+    get(input$dataSelect)
   })
-  output$graph02 <- renderPlot({
-    graph02
+  
+  selectedChkData <- reactive({
+    get(input$yearSelect)
+  })
+  
+  output$chkbox <- renderPrint({
+    input$yearSelect
+  })
+  
+  output$out1 <- renderPrint({
+    summary(selectedData())
+  })
+  output$out2 <- renderPrint({
+    str(selectedData())
   })
 }

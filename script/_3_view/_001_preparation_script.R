@@ -1,6 +1,5 @@
 ## Start Script
 
-
 base_data <- tryCatch(base_data,
          error = function(e) {
            source("script/_1_database/getDB.R")
