@@ -1,5 +1,4 @@
-source("script/_2_functions/functions.R")
-source("script/_1_database/getDB.R")
+source('script/_3_view/_001_preparation_script.R')
 
 ### Function
 

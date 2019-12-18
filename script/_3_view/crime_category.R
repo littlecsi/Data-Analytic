@@ -1,17 +1,9 @@
-library(dplyr)
-library(ggplot2)
-library(ggdark)
-library(reshape2)
-
-source("script/_2_functions/functions.R")
-source("script/_1_database/getDB.R")
-### Main
-
-# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
-col <- c('SUB_CATE')
+source("script/_3_view/_001_preparation_script.R")
 
 ### dataset
-crimeCat <- getColumns(col)
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+col <- c('SUB_CATE')
+crimeCat <- cutColumns(col)
 
 crimeCat <- subset(crimeCat, crimeCat$SUB_CATE != '')
 head(crimeCat)
@@ -60,3 +52,4 @@ per_table$Percent <- as.numeric(as.character.factor(per_table$Percent))
 ggplot(data = per_table[order(per_table$Percent, decreasing = T),], aes(x = "", y = Percent, fill = Type)) + geom_bar(stat = 'identity') + coord_polar(theta = 'y', start = 0) + geom_text(aes(label = paste(Percent,'%')), position = position_stack(vjust = 0.5)) + labs(x = "", y = "", title = "Proportion of Crime Type during the Last 10 years") + theme_minimal()
 
 dbDisconnectAll()
+

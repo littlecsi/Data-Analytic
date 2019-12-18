@@ -1,5 +1,3 @@
-library(gridExtra)
-
 source("script/_2_functions/functions.R")
 source("script/_1_database/getDB.R")
 

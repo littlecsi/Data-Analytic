@@ -1,6 +1,14 @@
 library(shiny)
 
+source('script/_3_view/_001_preparation_script.R')
+
+source('script/_3_view/crime_category.R')
+source('script/_3_view/crime_data_yearly.R')
 source('script/_3_view/crime_months_each_year.R')
+source('script/_3_view/crime_seasonal_trends.R')
+source('script/_3_view/fbi_compare_WA_by_city.R')
+
+
 # *Page(), *Panel() 등의 함수로 위치를 나누고 모양을 결정
 ui <- fluidPage(
   # *Input() 함수로 입력을 받는 요소들을 배치

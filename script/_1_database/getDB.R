@@ -27,7 +27,7 @@ dbDisconnectAll <- function(){
 # Get Columns from Database
 ## param : vector
 ## return : result set
-getColumns <- function(col) {
+getSeattleCrimeData <- function(col) {
   query01 <- paste("SELECT ", str_c(col, sep='', collapse = ', ')," FROM SEATTLE_CRIME WHERE NOT OCC_DATE LIKE \'%2019\'")
   cat('\n', query01, '\n')
   res <- dbGetQuery(conn, query01)

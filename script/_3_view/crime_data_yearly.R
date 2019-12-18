@@ -1,9 +1,5 @@
-library(dplyr)
-library(ggplot2)
-library(ggdark)
+source('script/_3_view/_001_preparation_script.R')
 
-source("script/_2_functions/functions.R")
-source("script/_1_database/getDB.R")
 ### Main
 
 # OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
