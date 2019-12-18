@@ -1,12 +1,11 @@
-source('script/_3_view/_001_preparation_script.R')
-# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
-
-####################################################################################################
-### Main
+source("script/_3_view/_001_preparation_script.R")
 
 ### dataset
-df <- getColumns('OCC_DATE')
-df_combined <- cutMonthYear(df)
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+col <- c('OCC_DATE')
+df01 <- cutColumns(col)
+
+df_combined <- cutMonthYear(df01)
 
 ### making a line graph
 df_changed <- as.data.frame(table(df_combined[,-1]))

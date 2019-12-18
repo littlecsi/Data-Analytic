@@ -42,15 +42,40 @@ cutMonthYear <- function(df) {
   return(df)
 }
 
-dateToYM <- function(dates, yearName, monthName) {
-  if(class(dates) == "data.frame") {
-    yVec <- substr(unlist(dates), 7, 10)
-    mVec <- substr(unlist(dates), 1, 2)
-
-    df <- data.frame(yVec=yVec, mVec=mVec)
-    colnames(df) <- c(as.character(yearName), as.character(monthName))
-
-    return(df)
+# function get Seasonal Average
+## param : season data (data frame)
+## return : vector
+getSeasonalAvg <- function(season) {
+  season_avg <- c()
+  for(i in year_vector) {
+    season_avg <- c(season_avg, round(mean(as.numeric(season[season$year == i,3])), 0))
   }
-  cat("dateToYM function Error \n")
+  return(season_avg)
+}
+
+# function get Seasonal Proportion
+## param : season data (data frame), full data included season (data frame)
+## return : vector
+getSeasonalProp <- function(season, originData) {
+  season_prop <- c()
+  for(i in year_vector) {
+    season_prop <- c(season_prop, round(sum(as.numeric(season[season$year == i, 3])) / sum(as.numeric(originData[originData$year == i, 3])), 4))
+  }
+  return(season_prop * 100)
+}
+
+# function get Seasonal Proportion
+## param : season data (data frame), full data included season (data frame)
+## return : vector
+getSeasonalTot <- function(season, yearData) {
+  yearProp <- round(sum(season[,3]) / sum(yearData[,3]), 4)
+  return(yearProp * 100)
+}
+
+# function Transpose Data Frame
+## param : data frame
+## return : data frame
+transDf <- function(season) {
+  transposedData <- as.data.frame(t(as.matrix(season)))
+  return(transposedData)
 }

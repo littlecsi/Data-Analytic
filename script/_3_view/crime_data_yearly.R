@@ -1,13 +1,12 @@
-source('script/_3_view/_001_preparation_script.R')
+source("script/_3_view/_001_preparation_script.R")
 
-### Main
-
+### dataset
 # OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
 col <- c('OCC_DATE')
-df01 <- getColumns(col)
+df01 <- cutColumns(col)
 
 ### substring years
-year <- substr(df01$OCC_DATE, 7, 10)
+year <- substr(df01[,1], 7, 10)
 head(year)
 # [1] "1908" "1964" "1973" "1974" "1975" "1975"
 

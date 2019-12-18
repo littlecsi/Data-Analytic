@@ -1,47 +1,10 @@
-source('script/_3_view/_001_preparation_script.R')
+source("script/_3_view/_001_preparation_script.R")
 
-### Function
+### dataset
+# OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
+col <- c('OCC_DATE')
+df01 <- cutColumns(col)
 
-# function get Seasonal Average
-## param : season data (data frame)
-## return : vector
-getSeasonalAvg <- function(season) {
-  season_avg <- c()
-  for(i in year_vector) {
-    season_avg <- c(season_avg, round(mean(as.numeric(season[season$year == i,3])), 0))
-  }
-  return(season_avg)
-}
-
-# function get Seasonal Proportion
-## param : season data (data frame), full data included season (data frame)
-## return : vector
-getSeasonalProp <- function(season, originData) {
-  season_prop <- c()
-  for(i in year_vector) {
-    season_prop <- c(season_prop, round(sum(as.numeric(season[season$year == i, 3])) / sum(as.numeric(originData[originData$year == i, 3])), 4))
-  }
-  return(season_prop * 100)
-}
-
-# function get Seasonal Proportion
-## param : season data (data frame), full data included season (data frame)
-## return : vector
-getSeasonalTot <- function(season, yearData) {
-  yearProp <- round(sum(season[,3]) / sum(yearData[,3]), 4)
-  return(yearProp * 100)
-}
-
-# function Transpose Data Frame
-## param : data frame
-## return : data frame
-transDf <- function(season) {
-  transposedData <- as.data.frame(t(as.matrix(season)))
-  return(transposedData)
-}
-
-### Data preprogress
-df01 <- getColumns('OCC_DATE')
 cut_ym <- cutMonthYear(df01)
 cut_ym <- cut_ym[-1]
 
