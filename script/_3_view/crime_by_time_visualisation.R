@@ -42,7 +42,7 @@ crimePlot1
 
 # OCC_DATE, OCC_TIME, REP_DATE, REP_TIME, SUB_CATE, PRI_DESC, PRECINCT, SECTOR, BEAT, NEIGHBOR
 col <- c("OCC_TIME", "SUB_CATE", "BEAT")
-crimeData <- getColumns(col)
+crimeData <- cutColumns(col)
 
 ### Get Json File - Beat Area
 map <- fromJSON("script/_1_database/seattle_beat.json")
