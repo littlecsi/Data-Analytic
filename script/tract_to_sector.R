@@ -38,24 +38,24 @@ sector <- c()
 for(i in c(1:nrow(df01))) {
   num <- str_extract(string=df01[i,7], pattern="[:digit:]+")
   sec <- ifelse(num %in% as.character(N), 'N',
-          ifelse(num %in% as.character(L), 'L',
-            ifelse(num %in% as.character(J), 'J',
-              ifelse(num %in% as.character(U), 'U',
-                ifelse(num %in% as.character(B), 'B',
-                  ifelse(num %in% as.character(Q), 'Q',
-                    ifelse(num %in% as.character(D), 'D',
-                      ifelse(num %in% as.character(C), 'C',
-                        ifelse(num %in% as.character(E), 'E',
-                          ifelse(num %in% as.character(M), 'M',
-                            ifelse(num %in% as.character(K), 'K',
-                              ifelse(num %in% as.character(G), 'G',
-                                ifelse(num %in% as.character(O), 'O',
-                                  ifelse(num %in% as.character(R), 'R',
-                                    ifelse(num %in% as.character(S), 'S',
-                                      ifelse(num %in% as.character(F), 'F', 'W'))))))))))))))))
+         ifelse(num %in% as.character(L), 'L',
+         ifelse(num %in% as.character(J), 'J',
+         ifelse(num %in% as.character(U), 'U',
+         ifelse(num %in% as.character(B), 'B',
+         ifelse(num %in% as.character(Q), 'Q',
+         ifelse(num %in% as.character(D), 'D',
+         ifelse(num %in% as.character(C), 'C',
+         ifelse(num %in% as.character(E), 'E',
+         ifelse(num %in% as.character(M), 'M',
+         ifelse(num %in% as.character(K), 'K',
+         ifelse(num %in% as.character(G), 'G',
+         ifelse(num %in% as.character(O), 'O',
+         ifelse(num %in% as.character(R), 'R',
+         ifelse(num %in% as.character(S), 'S',
+         ifelse(num %in% as.character(F), 'F', 'W'))))))))))))))))
   sector <- c(sector, sec)
 }
 
 df01$Sector <- sector
 
-write.csv(df01, file="dataset/Income/Seattle Income")
+write.csv(df01, file="dataset/Income/Seattle Income.csv")
