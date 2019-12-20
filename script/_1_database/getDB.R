@@ -25,7 +25,7 @@ dbDisconnectAll <- function(){
 }
 
 # Get Columns from Database
-## param : vector
+## param : none
 ## return : result set
 getSeattleCrimeData <- function() {
   query01 <- paste("SELECT OCC_DATE, OCC_TIME, REP_DATE, SUB_CATE, PRI_DESC, SECTOR, BEAT FROM SEATTLE_CRIME WHERE NOT OCC_DATE LIKE \'%2019\'")
@@ -45,11 +45,22 @@ getFBIData <- function(year) {
 }
 
 # Get Edu Data
-## param : vector
+## param : none
 ## return : result set
 ## param_val : all columns
 getEduData <- function() {
   query01 <- paste("SELECT * FROM usa_univ_completions")
+  cat('\n', query01, '\n')
+  res <- dbGetQuery(conn, query01)
+  return(res)
+}
+
+# Get Income Data
+## param : none
+## return : result set
+## param_val : all columns
+getIncomeData <- function() {
+  query01 <- paste("SELECT * FROM SEATTLE_INCOME")
   cat('\n', query01, '\n')
   res <- dbGetQuery(conn, query01)
   return(res)

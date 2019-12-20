@@ -7,3 +7,8 @@ base_data <- tryCatch(base_data,
            source("script/_2_functions/mlfunctions.R")
            return(getSeattleCrimeData())
          })
+
+income_data <- tryCatch(income_data,
+        error=function(e) {
+          return(getIncomeData())
+        })

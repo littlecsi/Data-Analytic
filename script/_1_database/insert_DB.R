@@ -35,10 +35,10 @@ fbi_csv[is.na(fbi_csv)] <- 0
 ## Get Edu Data
 edu_csv <- read.csv('dataset/Edu/Edu_Ver.csv')
 edu_csv[is.na(edu_csv)] <- 0
-str(edu_csv)
+# str(edu_csv)
 
 # MySQL DB Connect 
-conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="ec2-54-180-106-141.ap-northeast-2.compute.amazonaws.com")
+conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb", host="ec2-54-180-106-141.ap-northeast-2.compute.amazonaws.com")
 
 ### Function
 
@@ -57,6 +57,11 @@ dbCreateFBITable <- function() {
 dbCreateUnivTable <- function() {
   query03 <- 'CREATE TABLE USA_UNIV_COMPLETIONS(REP_NUM INT AUTO_INCREMENT PRIMARY KEY, YEAR_N INT,UNIV_ID INT,UNIV_NAME VARCHAR(256),SECTOR_ID INT,SECTOR_NAME VARCHAR(256),GEO_ID VARCHAR(256),GEO_NAME VARCHAR(64),COMPLETIONS INT)'
   dbSendQuery(conn, query03)
+}
+
+dbCreateIncomeTable <- function() {
+  query01 <- 'CREATE TABLE SEATTLE_INCOME(YEAR INT, HOUSEHOLD_RACE INT, HOUSEHOLD_RACE_MOE INT, GEOGRAPHY VARCHAR(64), GEO_ID VARCHAR(32), SECTOR VARCHAR(2))'
+  dbSendQuery(conn, query01)
 }
 
 # Database Insert Function
@@ -123,6 +128,27 @@ dbSendEdu <- function(df) {
   cat('FIN\n')
 }
 
+# Income Data
+dbSendIncome <- function(df) {
+  df <- read.csv("dataset/Income/Seattle Income.csv", stringsAsFactors=F, header=T)
+
+  len <- nrow(df)
+  pb <- progress_bar$new(format="Inserting [:bar] :current/:total (:percent) elapsed::elapsedfull", total=len, clear=F)
+  for(l in c(1:len)) {
+    query01 <- paste("INSERT INTO SEATTLE_INCOME VALUES(", 
+      df$Year[l], ", ",
+      df$Household.Income.by.Race[l], ", ",
+      df$Household.Income.by.Race.Moe[l], ", \'",
+      df$Geography[l], "\', \'",
+      df$ID.Geography[l], "\', \'",
+      df$Sector[l], "\')",
+      sep="")
+    dbSendQuery(conn, query01)
+    pb$tick()
+  }
+  cat("FIN\n")
+}
+
 # Database Disconnect All Function
 dbDisconnectAll <- function(){
   ile <- length(dbListConnections(MySQL())  )
@@ -135,16 +161,20 @@ dbDisconnectAll <- function(){
 
 # Database Send
 ## Seattle Crime Data
-dbCreateSeattleTable()
-dbSendSeattleCrime(df)
+# dbCreateSeattleTable()
+# dbSendSeattleCrime(df)
 
 ## FBI Data
-dbCreateFBITable()
-dbSendFBIData(fbi_csv)
+# dbCreateFBITable()
+# dbSendFBIData(fbi_csv)
 
 ## Univ Completions data
-dbCreateUnivTable()
-dbSendEdu(edu_csv)
+# dbCreateUnivTable()
+# dbSendEdu(edu_csv)
+
+## Income Data
+dbCreateIncomeTable();
+dbSendIncome();
 
 ### FIN
 
