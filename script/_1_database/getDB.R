@@ -11,7 +11,7 @@ library(progress)
 ### Variable and Option
 
 # MySQL DB Connect 
-conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="ec2-13-209-74-172.ap-northeast-2.compute.amazonaws.com")
+conn <- dbConnect(MySQL(), user="crime", password="Crime1q2w3e4r!", dbname="crimedb",host="ec2-54-180-106-141.ap-northeast-2.compute.amazonaws.com")
 
 ### Function
 
